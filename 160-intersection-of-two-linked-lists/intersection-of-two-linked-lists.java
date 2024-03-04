@@ -10,41 +10,22 @@
  * }
  */
 public class Solution {
-  public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
-    //boundary check
-
-    int m=0,n=0;
-    ListNode fhead=headA;
-    ListNode shead=headB;
-    while(fhead!=null){
-        m++;
-        fhead=fhead.next;
-    }
-    while(shead!=null){
-        n++;
-        shead=shead.next;
-    }
-
-    ListNode lh=headA,sh=headB;
-    if(m<n){
-        ListNode temp=lh;
-        lh=sh;
-        sh=temp;
-    }
-
-    int diff=Math.abs(m-n);
-    while(diff>0){
-        lh=lh.next;
-        diff--;
-    }
-
-    while(lh!=null && sh!=null){
-        if(lh==sh){
-            return lh;
+    public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
+        ListNode a=headA;
+        ListNode b=headB;
+        int cnt=0;
+        while(a!=b){
+            a=a.next;
+            b=b.next;
+            if(a==null) {
+                a=headB;
+                cnt++;
+                if(cnt>1){
+                    return null;
+                }
+            }
+            if(b==null) b=headA;
         }
-        lh=lh.next;
-        sh=sh.next;
+        return a;
     }
-  return null;
-}
 }
