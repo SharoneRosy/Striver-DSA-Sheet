@@ -12,18 +12,39 @@
 public class Solution {
   public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
     //boundary check
-    if(headA == null || headB == null) return null;
-    
-    ListNode a = headA;
-    ListNode b = headB;
-    
-    //if a & b have different len, then we will stop the loop after second iteration
-    while( a != b){
-    	//for the end of first iteration, we just reset the pointer to the head of another linkedlist
-        a = a == null? headB : a.next;
-        b = b == null? headA : b.next;    
+
+    int m=0,n=0;
+    ListNode fhead=headA;
+    ListNode shead=headB;
+    while(fhead!=null){
+        m++;
+        fhead=fhead.next;
     }
-    
-    return a;
+    while(shead!=null){
+        n++;
+        shead=shead.next;
+    }
+
+    ListNode lh=headA,sh=headB;
+    if(m<n){
+        ListNode temp=lh;
+        lh=sh;
+        sh=temp;
+    }
+
+    int diff=Math.abs(m-n);
+    while(diff>0){
+        lh=lh.next;
+        diff--;
+    }
+
+    while(lh!=null && sh!=null){
+        if(lh==sh){
+            return lh;
+        }
+        lh=lh.next;
+        sh=sh.next;
+    }
+  return null;
 }
 }
