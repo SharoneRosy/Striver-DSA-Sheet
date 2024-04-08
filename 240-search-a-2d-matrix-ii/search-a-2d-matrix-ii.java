@@ -4,9 +4,14 @@ class Solution {
         int m=matrix[0].length;
         int row=0,col=m-1;
         while(row<n && col>=0){
-            if(matrix[row][col]==target) return true;
-            else if(matrix[row][col]<target) row++;
-            else col--;
-        }return false;
+            if(matrix[row][col]==target){
+                return true;
+            }else if(matrix[row][col]<target){
+                row++;
+            }else{
+                col--;
+            }
+        }
+        return false;
     }
 }
