@@ -1,31 +1,31 @@
 class Solution {
-    public static boolean possible(int [] bloomDay,int day,int m,int k){
-        int n=bloomDay.length;
-        int cnt=0;
-        int noofbloom=0;
-        for(int i=0;i<n;i++){
+    public boolean possible(int[] bloomDay,int day,int m,int k){
+        int noOfFlowers=0;
+        int noOfBoqs=0;
+        for(int i=0;i<bloomDay.length;i++){
             if(bloomDay[i]<=day){
-                cnt++;
+                noOfFlowers++;
             }else{
-                noofbloom+=(cnt/k);
-                cnt=0;
+                noOfBoqs+=(noOfFlowers/k);
+                noOfFlowers=0;
             }
         }
-        noofbloom+=(cnt/k);
-        return noofbloom>=m;
+        noOfBoqs+=(noOfFlowers/k);
+        return noOfBoqs>=m;
     }
     public int minDays(int[] bloomDay, int m, int k) {
-        long val=(long)m*k;
+        int mini=Integer.MAX_VALUE;
+        int maxi=Integer.MIN_VALUE;
         int n=bloomDay.length;
+        long val=(long)k*m;
         if(val>n) return -1;
-         
-        int mini=Integer.MAX_VALUE,maxi=Integer.MIN_VALUE;
         for(int i=0;i<n;i++){
-                mini=Math.min(mini,bloomDay[i]);
-                maxi=Math.max(maxi,bloomDay[i]);
+            mini=Math.min(mini,bloomDay[i]);
+            maxi=Math.max(maxi,bloomDay[i]);
         }
 
-        int low=mini, high=maxi;
+        int low=mini;
+        int high=maxi;
         while(low<=high){
             int mid=(low+high)/2;
             if(possible(bloomDay,mid,m,k)){
@@ -33,6 +33,7 @@ class Solution {
             }else{
                 low=mid+1;
             }
-        }return low;
+        }
+        return low;
     }
 }
