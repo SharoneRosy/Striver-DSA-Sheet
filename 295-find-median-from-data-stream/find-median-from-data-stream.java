@@ -3,12 +3,14 @@ class MedianFinder {
     PriorityQueue<Integer>minHeap;
     int size;
     public MedianFinder() {
+        
         maxHeap=new PriorityQueue<>(Collections.reverseOrder());
         minHeap=new PriorityQueue<>();
         size=0;
     }
     
     public void addNum(int num) {
+        
         if(size%2==0){
             if(minHeap.isEmpty() || num<=minHeap.peek()){
                 maxHeap.add(num);
@@ -23,8 +25,7 @@ class MedianFinder {
                 minHeap.add(maxHeap.poll());
                 maxHeap.add(num);
             }
-        }
-        size++;
+        }size++;
         
     }
     
@@ -34,7 +35,6 @@ class MedianFinder {
         }else{
             return maxHeap.peek();
         }
-        
     }
 }
 
