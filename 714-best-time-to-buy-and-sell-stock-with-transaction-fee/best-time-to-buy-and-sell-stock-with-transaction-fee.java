@@ -10,8 +10,19 @@ class Solution {
     }
     public int maxProfit(int[] p,int fee) {
         int n=p.length;
-        int dp[][]=new int[n][2];
-        for(int[] it:dp) Arrays.fill(it,-1);
-        return f(0,1,p,dp,fee);
+        int []ahead=new int[2];
+        int []cur=new int[2];
+        ahead[0]=ahead[1]=0;
+        for(int i=n-1;i>=0;i--){
+            for(int buy=0;buy<=1;buy++){
+                 if(buy==1){
+                   cur[buy]= Math.max(-p[i]+ahead[0],ahead[1]);
+                }else {
+                    cur[buy]=Math.max( p[i]-fee+ahead[1],ahead[0]);
+                }
+                    }
+            ahead=cur.clone();   
+        }
+        return ahead[1];
     }
 }
