@@ -10,21 +10,21 @@ class Solution {
     }
     public int maxProfit(int[] p) {
         int n=p.length;
-        int dp[][][]=new int[n+1][2][3];
-        for(int[][] it:dp) for(int []it1:it) Arrays.fill(it1,0);
-       
+        int after[][]=new int[2][3];
+        int curr[][]=new int[2][3];
         for(int i=n-1;i>=0;i--){
             for(int buy=0;buy<=1;buy++){
                 
                 for(int cap=1;cap<=2;cap++){
                 if(buy==1){
-                    dp[i][1][cap]= Math.max(-p[i]+dp[i+1][0][cap],dp[i+1][1][cap]);
+                    curr[1][cap]= Math.max(-p[i]+after[0][cap],after[1][cap]);
                 }else {
-                    dp[i][0][cap]=Math.max( p[i]+dp[i+1][1][cap-1],dp[i+1][0][cap]);
+                    curr[0][cap]=Math.max( p[i]+after[1][cap-1],after[0][cap]);
                 }
                 }  
             }
+            after=curr.clone();
         }
-        return dp[0][1][2];
+        return after[1][2];
     }
 }
