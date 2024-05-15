@@ -1,21 +1,17 @@
 class Solution {
-   
-     public static int helper(int[][] grid, int row, int col,int [][]dp){
-           if(row == 0 && col == 0) return grid[row][col];
-           if(row < 0 || col < 0) return Integer.MAX_VALUE;
-           if(dp[row][col]!=-1) return dp[row][col];
-           int up = helper(grid, row - 1, col,dp);
-           int left = helper(grid, row, col - 1,dp);
-   
-           return dp[row][col]=grid[row][col] + Math.min(up, left);
-       }
-       public static int minPathSum(int[][] grid) {
-           int n = grid.length;
-           int m = grid[0].length;
-           int dp[][]=new int[n][m];
-           for(int[] it:dp){
-            Arrays.fill(it,-1);
-           }
-           return helper(grid, n - 1, m - 1,dp);
-       }
+    public int f(int r,int c,int [][] grid,int [][]dp){
+        if(r<0 || c<0 ) return (int)(1e9);
+        if(r==0 && c==0) return grid[r][c];
+        if(dp[r][c]!=-1) return dp[r][c];
+        int up=f(r-1,c,grid,dp);
+        int left=f(r,c-1,grid,dp);
+        return dp[r][c]=grid[r][c]+Math.min(up,left);
+    }
+    public int minPathSum(int[][] grid) {
+        int n=grid.length;
+        int m=grid[0].length;
+        int dp[][]=new int[n][m];
+        for(int[] it:dp) Arrays.fill(it,-1);
+        return f(n-1,m-1,grid,dp);
+    }
 }
