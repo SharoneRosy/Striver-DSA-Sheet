@@ -1,18 +1,25 @@
 class Solution {
     public int longestOnes(int[] nums, int k) {
-        int first=0,second=0;
-        while(second<nums.length){
-            if(nums[second]==0) k--;
-            if(k<0){
-                if(nums[first]==0){
-                    k++;
-                }
-                first++;
-            }
-            second++;
+        if (nums == null) {
+            throw new IllegalArgumentException("Input array is null");
         }
-        return second-first;
 
-        
-    }
+        int start = 0;
+        int end = 0;
+        int zeros = 0;
+
+        while (end < nums.length) {
+            if (nums[end] == 0) {
+                zeros++;
+            }
+            end++;
+            if (zeros > k) {
+                if (nums[start] == 0) {
+                    zeros--;
+                }
+                start++;
+            }
+        }
+
+        return end - start;    }
 }
