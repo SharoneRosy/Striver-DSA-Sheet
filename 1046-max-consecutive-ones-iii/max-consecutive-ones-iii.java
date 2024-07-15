@@ -1,9 +1,5 @@
 class Solution {
     public int longestOnes(int[] nums, int k) {
-        if (nums == null) {
-            throw new IllegalArgumentException("Input array is null");
-        }
-
         int start = 0;
         int end = 0;
         int zeros = 0;
