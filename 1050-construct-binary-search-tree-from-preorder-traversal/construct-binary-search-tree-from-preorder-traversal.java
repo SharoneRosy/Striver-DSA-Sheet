@@ -14,18 +14,16 @@
  * }
  */
 class Solution {
+    int index=0;
     public TreeNode bstFromPreorder(int[] preorder) {
-        return bst(preorder,Integer.MAX_VALUE, new int[]{0});
+        return generate_bst(preorder,Integer.MAX_VALUE);
     }
+    public TreeNode generate_bst(int [] preorder,int bound){
+        if(index==preorder.length || preorder[index]>bound) return null;
 
-    public TreeNode bst(int[]preorder,int bound, int[]i){
-        if(i[0]==preorder.length || preorder[i[0]]>bound){
-            return null;
-        }
-        TreeNode root=new TreeNode(preorder[i[0]++]);
-        root.left=bst(preorder,root.val,i);
-        root.right=bst(preorder,bound,i);
-
+        TreeNode root=new TreeNode(preorder[index++]);
+        root.left=generate_bst(preorder,root.val);
+        root.right=generate_bst(preorder,bound);
         return root;
     }
 }
