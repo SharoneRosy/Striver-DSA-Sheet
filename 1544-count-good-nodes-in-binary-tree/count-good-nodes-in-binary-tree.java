@@ -19,13 +19,14 @@ class Solution {
         solve(root,Integer.MIN_VALUE);
         return count;
     }
-    private void solve(TreeNode root,int max){
-        if(root==null){
-            return;
+    public void solve(TreeNode root, int max){
+        if(root==null) return ;
+        if(root.val>=max) {
+            count++;
+            max=Math.max(max,root.val);
         }
-        if(root.val>=max) count++;
-        max=Math.max(max,root.val);
         solve(root.left,max);
         solve(root.right,max);
+
     }
 }
