@@ -12,7 +12,9 @@ class Solution {
                 count[s.charAt(l)-'A']--;
                 l++;
             }
-            maxlen=Math.max(maxlen,r-l+1);
+            if(r-l+1-maxfreq<=k){
+                 maxlen=Math.max(maxlen,r-l+1);
+            }
             r++;
         }
         return maxlen;
