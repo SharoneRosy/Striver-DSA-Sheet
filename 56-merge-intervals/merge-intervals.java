@@ -15,3 +15,4 @@ class Solution {
         return mergedIntervals.toArray(new int[mergedIntervals.size()][]);
     }
 }
+
