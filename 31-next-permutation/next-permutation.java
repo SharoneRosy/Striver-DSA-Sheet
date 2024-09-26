@@ -1,39 +1,38 @@
 class Solution {
-    public static void reverse(int[] arr, int low, int high){
-        int i=low,j=high;
-        while(i<j){
-            int temp=arr[i];
-            arr[i]=arr[j];
-            arr[j]=temp;
-            i++;
-            j--;
+    public static void reverse(int[] arr, int low,int high){
+        while(low<high){
+            int temp=arr[low];
+            arr[low]=arr[high];
+            arr[high]=temp;
+            low++;
+            high--;
         }
     }
     public void nextPermutation(int[] nums) {
-        int breakPoint=-1;
         int n=nums.length;
+        int ind=-1;
         for(int i=n-2;i>=0;i--){
             if(nums[i]<nums[i+1]){
-                 breakPoint=i;
+                ind=i;
                 break;
             }
         }
 
-        if(breakPoint==-1){
+        if(ind==-1){
             reverse(nums,0,n-1);
             return;
-        } 
+        }
 
-        for(int i=n-1;i>breakPoint;i--){
-            if(nums[i]>nums[breakPoint]){
+        for(int i=n-1;i>ind;i--){
+            if(nums[i]>nums[ind]){
                 int temp=nums[i];
-                nums[i]=nums[breakPoint];
-                nums[breakPoint]=temp;
+                nums[i]=nums[ind];
+                nums[ind]=temp;
                 break;
             }
         }
-        reverse(nums,breakPoint+1,n-1);
-        return ;
-        
+
+        reverse(nums,ind+1,n-1);
+        return;
     }
 }
