@@ -1,20 +1,12 @@
 class Solution {
-    public double myPow(double x, int N) {
-        if(N==0) return 1;
-
-        long n=N;
-        if(n<0){
-            n=-n;
-            x=1.0/x;
-        }
-        int p=(int)( n / 2 );
-        double temp=myPow(x,p);
+    public double myPow(double x, int n) {
+        if(n==0)return 1.0;
+        if(n==1) return x;
+        if(n==-1) return 1/x;
         if(n%2==0){
-
-            return temp*temp;
+            return myPow(x*x,n/2);
         }else{
-            return x*temp*temp;
+            return x*myPow(x,n-1);
         }
-
-   }
+    }
 }
