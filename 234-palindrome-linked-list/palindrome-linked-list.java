@@ -37,5 +37,5 @@ class Solution {
         }
         reverseLL(newhead);
         return true;
-        }
+    }
 }
