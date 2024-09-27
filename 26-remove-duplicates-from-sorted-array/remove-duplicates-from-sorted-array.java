@@ -8,7 +8,5 @@ class Solution {
             }
         }
         return cnt+1;
-
-         
     }
 }
