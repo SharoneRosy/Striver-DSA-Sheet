@@ -1,17 +1,34 @@
 class Solution {
+
     public int findMinDifference(List<String> timePoints) {
-        int []min=new int[timePoints.size()];
-        for(int i=0;i<timePoints.size();i++){
-            String time=timePoints.get(i);
-            int h=Integer.parseInt(time.substring(0,2));
-            int m=Integer.parseInt(time.substring(3));
-            min[i]=h*60+m;
+        // create buckets array for the times converted to minutes
+        boolean[] minutes = new boolean[24 * 60];
+        for (String time : timePoints) {
+            int min =
+                Integer.parseInt(time.substring(0, 2)) * 60 +
+                Integer.parseInt(time.substring(3));
+            if (minutes[min]) return 0;
+            minutes[min] = true;
         }
-        Arrays.sort(min);
-        int ans=Integer.MAX_VALUE;
-        for(int i=0;i<min.length-1;i++){
-            ans=Math.min(ans,min[i+1]-min[i]);
+        int prevIndex = Integer.MAX_VALUE;
+        int firstIndex = Integer.MAX_VALUE;
+        int lastIndex = Integer.MAX_VALUE;
+        int ans = Integer.MAX_VALUE;
+
+        // find differences between adjacent elements in sorted array
+        for (int i = 0; i < 24 * 60; i++) {
+            if (minutes[i]) {
+                if (prevIndex != Integer.MAX_VALUE) {
+                    ans = Math.min(ans, i - prevIndex);
+                }
+                prevIndex = i;
+                if (firstIndex == Integer.MAX_VALUE) {
+                    firstIndex = i;
+                }
+                lastIndex = i;
+            }
         }
-        return Math.min(ans,24*60-min[min.length-1]+min[0]);
+
+        return Math.min(ans, 24 * 60 - lastIndex + firstIndex);
     }
 }
