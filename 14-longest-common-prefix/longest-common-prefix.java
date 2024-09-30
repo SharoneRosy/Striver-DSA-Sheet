@@ -1,22 +1,22 @@
 class Solution {
     public String longestCommonPrefix(String[] strs) {
         if(strs==null || strs.length==0) return "";
-        return lcp(strs,0,strs.length-1);
-    }
-    private String lcp(String[] strs,int l,int r){
-        if(l==r) return strs[l];
-        else{
-            int mid=(l+r)/2;
-            String lcpleft=lcp(strs,l,mid);
-            String lcpright=lcp(strs,mid+1,r);
-            return commonPrefix(lcpleft,lcpright);
+        int minLen=Integer.MAX_VALUE;
+        for(String i:strs) minLen=Math.min(i.length(),minLen);
+        int low=1;
+        int high=minLen;
+        while(low<=high){
+            int mid=(low+high)/2;
+            if(isCommonPrefix(strs,mid)) low=mid+1;
+            else high=mid-1;
         }
+        return strs[0].substring(0,(low+high)/2);
     }
-    private String commonPrefix(String left,String right){
-        int min=Math.min(left.length(),right.length());
-        for(int i=0;i<min;i++){
-            if(left.charAt(i)!=right.charAt(i)) return left.substring(0,i);
+    private boolean isCommonPrefix(String[] strs, int len){
+        String str1=strs[0].substring(0,len);
+        for(int i=1;i<strs.length;i++){
+            if(!strs[i].startsWith(str1)) return false;
         }
-        return left.substring(0,min);
+        return true;
     }
 }
