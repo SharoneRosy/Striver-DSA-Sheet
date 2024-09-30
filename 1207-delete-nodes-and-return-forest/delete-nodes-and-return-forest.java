@@ -14,35 +14,23 @@
  * }
  */
 class Solution {
-    private TreeNode def_traversal(TreeNode root, Set<Integer> to_delete_set, List<TreeNode> res) {
-
-        if (root == null)
-            return null;
-
-        root.left = def_traversal(root.left, to_delete_set, res);
-        root.right = def_traversal(root.right, to_delete_set, res);
-
-        if (to_delete_set.contains(root.val)) {
-            if (root.left != null)
-                res.add(root.left);
-            if (root.right != null)
-                res.add(root.right);
+    private TreeNode postorder(TreeNode node, Set<Integer>todelete,List<TreeNode>forest){
+        if(node==null) return null;
+        node.left=postorder(node.left,todelete,forest);
+        node.right=postorder(node.right,todelete,forest);
+        if(todelete.contains(node.val)){
+            if(node.left!=null) forest.add(node.left);
+            if(node.right!=null) forest.add(node.right);
             return null;
         }
-        return root;
+        return node;
     }
-
     public List<TreeNode> delNodes(TreeNode root, int[] to_delete) {
-        Set<Integer> to_delete_set = new HashSet<>();
-        for (int val : to_delete) {
-            to_delete_set.add(val);
-        }
-        List<TreeNode> res = new ArrayList<TreeNode>();
-        root = def_traversal(root, to_delete_set, res);
-
-        if (root != null)
-            res.add(root);
-
-        return res;
+        Set<Integer>todelete=new HashSet<>();
+        for(int val:to_delete) todelete.add(val);
+        List<TreeNode>forest=new ArrayList<>();
+        root=postorder(root,todelete,forest);
+        if(root!=null) forest.add(root);
+        return forest;
     }
 }
