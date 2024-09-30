@@ -1,15 +1,15 @@
 class Solution {
-    static boolean solve(String s,int i){
-        int n=s.length();
-        if(i>=n/2) return true;
-        if(s.charAt(i)!=s.charAt(n-i-1)) return false;
-        return solve(s,i+1);
-    }
     public boolean isPalindrome(String s) {
-        s=s.replaceAll("[^a-zA-Z0-9]","").toLowerCase();
-        if(s.length()<1) return true;
-        int i=0;
-        return solve(s,i);
-        
+        for(int i=0,j=s.length()-1;i<j;i++,j--){
+            while(i<j && !Character.isLetterOrDigit(s.charAt(i))){
+                i++;
+            }
+            while(i<j && !Character.isLetterOrDigit(s.charAt(j))){
+                j--;
+            }
+            if(Character.toLowerCase(s.charAt(i))!=
+            Character.toLowerCase(s.charAt(j))) return false;
+        }
+        return true;
     }
 }
