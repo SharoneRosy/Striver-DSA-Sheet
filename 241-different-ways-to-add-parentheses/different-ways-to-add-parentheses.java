@@ -1,28 +1,41 @@
 class Solution {
-    List<Integer> solve(String s)
-    {
-        List<Integer> result = new ArrayList<>();
-        for(int i=0; i<s.length(); i++) {
-            char ch = s.charAt(i);
-            if(ch=='+'||ch=='-'||ch=='*'){
-                List<Integer> left = new ArrayList<>();
-                left = solve(s.substring(0,i));
-                List<Integer> right = new ArrayList<>();
-                right = solve(s.substring(i+1));
+    public List<Integer> diffWaysToCompute(String expression) {
+        Map<String, List<Integer>> memo = new HashMap<>();
+        
+        return helper(expression, memo);
+    }
 
-                for(int x: left){
-                    for(int y: right)  {
-                        if(ch=='+') result.add(x+y);
-                        else if(ch=='-') result.add(x-y);
-                        else result.add(x*y);
+    private List<Integer> helper(String expr, Map<String, List<Integer>> memo) {
+        if (memo.containsKey(expr)) {
+            return memo.get(expr);
+        }
+
+        List<Integer> result = new ArrayList<>();
+        for (int i = 0; i < expr.length(); i++) {
+            char c = expr.charAt(i);
+            if (c == '+' || c == '-' || c == '*') {
+                List<Integer> left = helper(expr.substring(0, i), memo);
+                List<Integer> right = helper(expr.substring(i + 1), memo);
+
+                for (int l : left) {
+                    for (int r : right) {
+                        if (c == '+') {
+                            result.add(l + r);
+                        } else if (c == '-') {
+                            result.add(l - r);
+                        } else {
+                            result.add(l * r);
+                        }
                     }
                 }
             }
         }
-        if(result.size()==0) result.add(Integer.valueOf(s));
+
+        if (result.isEmpty()) {
+            result.add(Integer.parseInt(expr));
+        }
+
+        memo.put(expr, result);
         return result;
-    }
-    public List<Integer> diffWaysToCompute(String expression) {
-        return solve(expression);
     }
 }
