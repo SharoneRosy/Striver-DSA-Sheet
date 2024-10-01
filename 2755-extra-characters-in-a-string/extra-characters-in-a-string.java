@@ -1,41 +1,17 @@
-class Trie {
-    Map<Character, Trie> children = new HashMap();
-    boolean isEnd = false;
-}
-
 class Solution {
     public int minExtraChar(String s, String[] dictionary) {
-        int n = s.length();
-        var root = makeTrie(dictionary);
-        var dp = new int[n + 1];
+        Set<String>set=new HashSet<>();
+        for(String x:dictionary) set.add(x);
+        int [] dp=new int[s.length()+1];
 
-        for (int start = n - 1; start >= 0; start--) {
-            dp[start] = dp[start + 1] + 1;
-            var node = root;
-            for (int end = start; end < n; end++) {
-                if (!node.children.containsKey(s.charAt(end))) {
-                    break;
-                }
-                node = node.children.get(s.charAt(end));
-                if (node.isEnd) {
-                    dp[start] = Math.min(dp[start], dp[end + 1]);
+        for(int i=1;i<s.length()+1;i++){
+            dp[i]=dp[i-1]+1;
+            for(int j=0;j<i;j++){
+                if(set.contains(s.substring(j,i))){
+                    dp[i]=Math.min(dp[i],dp[j]);
                 }
             }
         }
-
-        return dp[0];
-    }
-
-    public Trie makeTrie(String[] dictionary) {
-        var root = new Trie();
-        for (var word : dictionary) {
-            var node = root;
-            for (var c : word.toCharArray()) {
-                node.children.putIfAbsent(c, new Trie());
-                node = node.children.get(c);
-            }
-            node.isEnd = true;
-        }
-        return root;
+        return dp[s.length()];
     }
 }
