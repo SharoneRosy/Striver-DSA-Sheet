@@ -1,20 +1,42 @@
 class Solution {
     public ListNode mergeKLists(ListNode[] lists) {
-        ListNode head = new ListNode(0);
-        ListNode point = head;
-        PriorityQueue<ListNode> queue = new PriorityQueue<>((a,b)->a.val-b.val);
-        for (ListNode node : lists) {
-            if (node != null) {
-                queue.add(node);
-            }
+        if (lists == null || lists.length == 0) {
+            return null;
         }
-        while (!queue.isEmpty()) {
-            point.next = queue.poll();
-            point = point.next;
-            if (point.next != null) {
-                queue.add(point.next);
-            }
+        return mergeKListsHelper(lists, 0, lists.length - 1);
+    }
+    
+    private ListNode mergeKListsHelper(ListNode[] lists, int start, int end) {
+        if (start == end) {
+            return lists[start];
         }
-        return head.next;
+        if (start + 1 == end) {
+            return merge(lists[start], lists[end]);
+        }
+        int mid = start + (end - start) / 2;
+        ListNode left = mergeKListsHelper(lists, start, mid);
+        ListNode right = mergeKListsHelper(lists, mid + 1, end);
+        return merge(left, right);
+    }
+    
+    private ListNode merge(ListNode l1, ListNode l2) {
+        ListNode dummy = new ListNode(0);
+        ListNode curr = dummy;
+        
+        while (l1 != null && l2 != null) {
+            if (l1.val < l2.val) {
+                curr.next = l1;
+                l1 = l1.next;
+            } else {
+                curr.next = l2;
+                l2 = l2.next;
+            }
+            curr = curr.next;
+        }
+        
+        curr.next = (l1 != null) ? l1 : l2;
+        
+        return dummy.next;
     }
 }
+
