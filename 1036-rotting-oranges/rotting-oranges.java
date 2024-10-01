@@ -1,40 +1,42 @@
 class Solution {
-    // run the rotting process, by marking the rotten oranges with the timestamp
-    public boolean runRottingProcess(int timestamp, int[][] grid, int ROWS, int COLS) {
-        int[][] directions = { {-1, 0}, {0, 1}, {1, 0}, {0, -1}};
-        // flag to indicate if the rotting process should be continued
-        boolean toBeContinued = false;
-        for (int row = 0; row < ROWS; ++row)
-            for (int col = 0; col < COLS; ++col)
-                if (grid[row][col] == timestamp)
-                    // current contaminated cell
-                    for (int[] d : directions) {
-                        int nRow = row + d[0], nCol = col + d[1];
-                        if (nRow >= 0 && nRow < ROWS && nCol >= 0 && nCol < COLS)
-                            if (grid[nRow][nCol] == 1) {
-                                // this fresh orange would be contaminated next
-                                grid[nRow][nCol] = timestamp + 1;
-                                toBeContinued = true;
-                            }
-                    }
-        return toBeContinued;
-    }
-
     public int orangesRotting(int[][] grid) {
-        int ROWS = grid.length, COLS = grid[0].length;
-        int timestamp = 2;
-        while (runRottingProcess(timestamp, grid, ROWS, COLS))
-            timestamp++;
+        int n = grid.length;
+        int m = grid[0].length;
+        Queue<int[]> rotten=new LinkedList<>();
+        int freshCount =0;
+        for(int i=0;i<n;i++){
+            for(int j=0;j<m;j++){
+                if(grid[i][j]==2){
+                    rotten.offer(new int[]{i,j});
+                }
+                if(grid[i][j]==1)freshCount++;
+            }
+        }
+        int rottenTime=0;
+        int madeRotten=0;
+        int[][] dir = {{1,0},{-1,0},{0,1},{0,-1}};
 
-        // end of process, to check if there are still fresh oranges left
-        for (int[] row : grid)
-            for (int cell : row)
-                // still got a fresh orange left
-                if (cell == 1)
-                    return -1;
-
-
-        // return elapsed minutes if no fresh orange left
-        return timestamp - 2;
+        while(!rotten.isEmpty()&& freshCount>0){
+            rottenTime++;
+            int queueSize = rotten.size();
+            for(int i=0;i<queueSize;i++){
+                int[] curr = rotten.poll();
+                int x=curr[0];
+                int y = curr[1];
+                    for(int j=0;j<4;j++){
+                        int nx=x+dir[j][0];
+                        int ny=y+dir[j][1];
+                        if(nx>=0 && ny>=0 && nx<n && ny<m && grid[nx][ny]==1){
+                            grid[nx][ny]=2;
+                            rotten.offer(new int[]{nx,ny});
+                            freshCount--;
+                        }
+                        
+                    }
+                
+            }
+        
+        }
+        return freshCount==0 ? rottenTime:-1 ;
     }
 }
