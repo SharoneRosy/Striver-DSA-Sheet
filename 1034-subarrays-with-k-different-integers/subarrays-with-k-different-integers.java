@@ -8,13 +8,10 @@ class Solution {
             while(map.size()>k){
                 map.put(nums[i],map.getOrDefault(nums[i],0)-1);
                 if(map.get(nums[i])==0){
-                    map.remove(nums[i]);
-                    
+                    map.remove(nums[i]); 
                 }
                 i++;
             }
-
-
                 cnt+=(j-i+1);
                 j++;
             
