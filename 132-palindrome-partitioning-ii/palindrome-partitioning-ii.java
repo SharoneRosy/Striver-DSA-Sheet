@@ -23,8 +23,20 @@ class Solution {
     }
     public int minCut(String s) {
         int n=s.length();
-        int dp[]=new int[n];
-        Arrays.fill(dp,-1);
-        return f(0,n,s,dp)-1;
+        int dp[]=new int[n+1];
+        Arrays.fill(dp,0);
+        dp[n]=0;
+        for(int i=n-1;i>=0;i--){
+            int mini=Integer.MAX_VALUE;
+            
+            for(int j=i;j<n;j++){
+                if(isPali(i,j,s)){
+                    int val= 1+dp[j+1];
+                    mini=Math.min(mini,val);
+                }
+            }
+           dp[i]= mini;
+        }
+        return dp[0]-1;
     }
 }
