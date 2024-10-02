@@ -20,7 +20,6 @@ class Solution {
     }
     public TreeNode generate_bst(int [] preorder,int bound){
         if(index==preorder.length || preorder[index]>bound) return null;
-
         TreeNode root=new TreeNode(preorder[index++]);
         root.left=generate_bst(preorder,root.val);
         root.right=generate_bst(preorder,bound);
