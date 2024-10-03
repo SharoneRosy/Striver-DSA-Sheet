@@ -1,44 +1,51 @@
-// TC: O(N^3)
-// Sc: O(N^2)
-class Solution {
-
+class Solution {    
     public int findTheCity(int n, int[][] edges, int distanceThreshold) {
-        int[][] dis = new int[n][n];
-        for (int[] row : dis) {
-            Arrays.fill(row, 10001);
-        }
-        for (int[] edge : edges) {
-            dis[edge[0]][edge[1]] = dis[edge[1]][edge[0]] = edge[2];
-        }
+        int[][] shortestPath = new int[n][n];
 
-        // diagonal as zero
+        // Intializing Distance graph;
         for (int i = 0; i < n; i++) {
-            dis[i][i] = 0;
+            Arrays.fill(shortestPath[i], Integer.MAX_VALUE);
+            shortestPath[i][i] = 0;
         }
 
-        // FLOYYD ALGO
-        for (int k = 0; k < n; k++) {
-            for (int i = 0; i < n; i++) {
-                for (int j = 0; j < n; j++) {
-                    dis[i][j] = Math.min(dis[i][j], dis[i][k] + dis[k][j]);
+        //Adding edge weight to the graph to compute shortest path;
+        for (int i = 0; i < edges.length; i++) {
+            int u = edges[i][0];
+            int v = edges[i][1];
+            int w = edges[i][2];
+            shortestPath[u][v] = w;
+            shortestPath[v][u] = w;
+        }
+
+        // Pre-computing shortest path using floydd warshal algorithm
+        for(int k = 0; k < n; k++) {
+            for(int i = 0; i < n; i++) {
+                for(int j = 0; j < n; j++) {
+                    if(shortestPath[i][k] != Integer.MAX_VALUE && shortestPath[k][j] != Integer.MAX_VALUE) {
+                        shortestPath[i][j] = Math.min(shortestPath[i][j], 
+                                                      shortestPath[i][k] + shortestPath[k][j]);
+                    }
                 }
             }
         }
 
-        int res = 0, smallest = n;
-        for (int i = 0; i < n; i++) {
-            int cnt = 0;
-            for (int j = 0; j < n; j++) {
-                if (dis[i][j] <= distanceThreshold) {
-                    cnt++;
+
+        //finding the result
+        int minCount = Integer.MAX_VALUE;
+        int res = -1;
+        for(int i = 0; i < n; i++) {
+            int count = 0;
+            for(int j = 0; j < n; j++) {
+                if(i != j && shortestPath[i][j] <= distanceThreshold) {
+                    count++;
                 }
             }
-
-            if (cnt <= smallest) {
-                res = i;
-                smallest = cnt;
+            if(count <= minCount) {
+                res = Math.max(res, i);
+                minCount = count;
             }
         }
+
         return res;
     }
 }
