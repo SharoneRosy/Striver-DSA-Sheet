@@ -1,6 +1,6 @@
 class Solution {
-    public void solve(int c,int o,String s, int n, List<String>res){
-        if(o==n && c==n){
+    public void solve(int c,int o,String s, int n,List<String> res){
+        if(o==n && c==n) {
             res.add(s);
             return ;
         }
