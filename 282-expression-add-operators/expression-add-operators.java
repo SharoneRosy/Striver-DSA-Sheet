@@ -1,28 +1,37 @@
 class Solution {
     public List<String> addOperators(String num, int target) {
-        List<String> res = new ArrayList<>();
-        helper(num,target,res,0,"",0,0);
-        return res;
+        List<String> list = new ArrayList<>();
+        String str = new String();
+        ans(num, target, list, str, 0, 0, 0);
+        return list;
     }
 
-    private static void helper(String num,long target,List<String> res,int ind,String s,long curr,long prev){
-        if(ind == num.length()){
-            if(curr == target)
-                res.add(s);
+    static void ans(String num, int target, List<String> list, String str, long temp, int idx, long mul) {
+        if (idx == num.length()) {
+            // If we've reached the end of the number, check if the calculated value matches the target
+            if (temp == target) {
+                list.add(str);
+            }
             return;
         }
 
-        for(int i=ind;i<num.length();i++){
-            if(i > ind && num.charAt(ind) == '0')
+        // Iterate through each index in the input string 'num' to form different numbers
+        for (int i = idx; i < num.length(); i++) {
+            // If the current index is not the starting index 'idx' and the character at 'idx' is '0', break out of the loop
+            if (i != idx && num.charAt(idx) == '0')
                 break;
-            long n = Long.parseLong(num.substring(ind,i+1));
-            if(ind==0){
-                helper(num,target,res,i+1,s+n,n,n);
-            }
-            else{
-                helper(num,target,res,i+1,s+"*"+n,curr-prev+(prev*n),prev*n);
-                helper(num,target,res,i+1,s+"+"+n,curr+n,n);
-                helper(num,target,res,i+1,s+"-"+n,curr-n,-n);
+
+            // Extract the substring from 'num' starting at 'idx' up to the current index 'i'
+            long numVal = Long.parseLong(num.substring(idx, i + 1));
+
+            // If 'idx' is 0 (indicating the start of the string), consider only addition
+            if (idx == 0) {
+                ans(num, target, list, str + numVal, numVal, i + 1, numVal);
+            } else {
+                // Consider addition, subtraction, and multiplication operations recursively
+                ans(num, target, list, str + "+" + numVal, temp + numVal, i + 1, numVal);
+                ans(num, target, list, str + "-" + numVal, temp - numVal, i + 1, -numVal);
+                ans(num, target, list, str + "*" + numVal, temp - mul + mul * numVal, i + 1, mul * numVal);
             }
         }
     }
