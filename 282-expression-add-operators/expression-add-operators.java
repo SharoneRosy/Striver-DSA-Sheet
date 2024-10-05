@@ -1,43 +1,29 @@
 class Solution {
-    private void soln(List<String> result, StringBuilder currExp, String num, int target, int ind, long eval,
-            long prev) {
-        if (ind == num.length() && eval == target) {
-            result.add(currExp.toString());
+    public List<String> addOperators(String num, int target) {
+        List<String> res = new ArrayList<>();
+        helper(num,target,res,0,"",0,0);
+        return res;
+    }
+
+    private static void helper(String num,long target,List<String> res,int ind,String s,long curr,long prev){
+        if(ind == num.length()){
+            if(curr == target)
+                res.add(s);
             return;
         }
 
-        for (int i = ind; i < num.length(); i++) {
-            if (i != ind && num.charAt(ind) == '0')
+        for(int i=ind;i<num.length();i++){
+            if(i > ind && num.charAt(ind) == '0')
                 break;
-
-            long cur = Long.parseLong(num.substring(ind, i + 1));
-            int len = currExp.length();
-
-            if (ind == 0) {
-                currExp.append(cur);
-                soln(result, currExp, num, target, i + 1, cur, cur);
-                currExp.setLength(len);
-            } else {
-                currExp.append('+').append(cur);
-                soln(result, currExp, num, target, i + 1, eval + cur, cur);
-                currExp.setLength(len);
-
-                currExp.append('-').append(cur);
-                soln(result, currExp, num, target, i + 1, eval - cur, -cur);
-                currExp.setLength(len);
-
-                currExp.append('*').append(cur);
-                soln(result, currExp, num, target, i + 1, eval - prev + (prev * cur), cur * prev);
-                currExp.setLength(len);
+            long n = Long.parseLong(num.substring(ind,i+1));
+            if(ind==0){
+                helper(num,target,res,i+1,s+n,n,n);
+            }
+            else{
+                helper(num,target,res,i+1,s+"*"+n,curr-prev+(prev*n),prev*n);
+                helper(num,target,res,i+1,s+"+"+n,curr+n,n);
+                helper(num,target,res,i+1,s+"-"+n,curr-n,-n);
             }
         }
-    }
-
-    public List<String> addOperators(String num, int target) {
-        List<String> result = new ArrayList<>();
-        if (num == null || num.length() == 0)
-            return result;
-        soln(result, new StringBuilder(), num, target, 0, 0, 0);
-        return result;
     }
 }
