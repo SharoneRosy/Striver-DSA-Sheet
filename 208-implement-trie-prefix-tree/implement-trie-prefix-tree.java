@@ -1,62 +1,71 @@
-class Node {
-    Node a[]=new Node[26];
-    boolean flag=false;
+class TrieNode{
+    private TrieNode[] links;
+    private boolean isEnd;
 
-    boolean isPresent(char ch){
-        return a[ch-'a']!=null;
-    }
-
-    void create(char ch,Node node){
-        a[ch-'a']=node;
-    }
-    Node get(char ch){
-        return a[ch-'a'];
+    public TrieNode(){
+        links=new TrieNode[26];
     }
 
-    void endSet(){
-        flag=true;
+    public boolean containsKey(char ch){
+        return links[ch-'a']!=null;
     }
-    boolean isEnd(){
-        return flag;
+
+    public TrieNode get(char ch){
+        return links[ch-'a'];
     }
+
+    public void put(char ch,TrieNode node){
+        links[ch-'a']=node;
+    }
+
+    public void setEnd(){
+        isEnd=true;
+    }
+    
+    public boolean isEnd(){
+        return isEnd;
+    }
+
 }
 class Trie {
-    Node root;
+    private TrieNode root;
+
     public Trie() {
-        root=new Node();
+        root=new TrieNode();
     }
     
     public void insert(String word) {
-        Node node =root;
-        for(char ch:word.toCharArray()){
-            if(!node.isPresent(ch)){
-                node.create(ch,new Node());
+        TrieNode node=root;
+        for(int i=0;i<word.length();i++){
+            char c=word.charAt(i);
+            if(!node.containsKey(c)){
+                node.put(c,new TrieNode());
             }
-            node=node.get(ch);
+            node=node.get(c);
         }
-        node.endSet();
+        node.setEnd();
     }
     
-    public boolean search(String word) {
-        Node node=root;
-        for(char ch:word.toCharArray()){
-            if(!node.isPresent(ch)){
-                return false;
+    private TrieNode searchPrefix(String word){
+        TrieNode node=root;
+        for(int i=0;i<word.length();i++){
+            char c=word.charAt(i);
+            if(node.containsKey(c)){
+                node=node.get(c);
+            }else{
+                return null;
             }
-            node=node.get(ch);
         }
-        return node.isEnd();
+        return node;
+    }
+    public boolean search(String word) {
+        TrieNode node=searchPrefix(word);
+        return node!=null && node.isEnd();
     }
     
     public boolean startsWith(String prefix) {
-        Node node=root;
-        for(char ch:prefix.toCharArray()){
-            if(!node.isPresent(ch)){
-                return false;
-            }
-            node=node.get(ch);
-        }
-        return true;
+        TrieNode node=searchPrefix(prefix);
+        return node!=null;
     }
 }
 
