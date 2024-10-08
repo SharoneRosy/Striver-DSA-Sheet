@@ -1,42 +1,38 @@
-class Solution {
-    public int maxCoins(int[] nums) {
-        // add 1 before and after nums
-        int n = nums.length + 2;
-        int[] newNums = new int[n];
-        System.arraycopy(nums, 0, newNums, 1, n - 2);
-        newNums[0] = 1;
-        newNums[n - 1] = 1;
-
-        // cache the results of dp
-        int[][] memo = new int[n][n];
-
-        // we can not burst the first one and the last one
-        // since they are both fake balloons added by ourselves
-        return dp(memo, newNums, 1, n - 2);
-    }
-
-    public int dp(int[][] memo, int[] nums, int left, int right) {
-        // return maximum if we burst all nums[left]...nums[right], inclusive
-        if (right - left < 0) {
-            return 0;
+class Solution
+ {
+     public int find(int i,int j,List<Integer> l,int dp[][])
+     {
+         if(i>j)
+           return 0;
+           if(dp[i][j]!=-1)
+            return dp[i][j];
+            int min=Integer.MIN_VALUE;
+        for(int k=i;k<=j;k++)
+        {
+            int burst=l.get(i-1)*l.get(k)*l.get(j+1)+find(i,k-1,l,dp)+find(k+1,j,l,dp);
+            min=Math.max(min,burst);
         }
+        return dp[i][j]=min;
+     }
+    public int maxCoins(int[] nums)
+     {
+         int n=nums.length;
+         int dp[][]=new int[n+1][n+1];
+         for(int i=0;i<=n;i++)
+         {
+             for(int j=0;j<=n;j++)
+             {
+                 dp[i][j]=-1;
+             }
+         }
+         List<Integer> l=new ArrayList<>();
+         for(int i:nums)
+          l.add(i);
+          l.add(1);
+          l.add(0,1);
+          
 
-        // we've already seen this, return from cache
-        if (memo[left][right] > 0) {
-            return memo[left][right];
-        }
-
-        // find the last burst one in nums[left]...nums[right]
-        int result = 0;
-        for (int i = left; i <= right; i++) {
-            // nums[i] is the last burst one
-            int gain = nums[left - 1] * nums[i] * nums[right + 1];
-            // nums[i] is fixed, recursively call left side and right side
-            int remaining = dp(memo, nums, left, i - 1) + dp(memo, nums, i + 1, right);
-            result = Math.max(result, remaining + gain);
-        }
-        // add to the cache
-        memo[left][right] = result;
-        return result;
+         return find(1,n,l,dp);
+        
     }
 }
