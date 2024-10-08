@@ -99,7 +99,7 @@ class Solution {
         }
 
         // Find the maximum component size in the disjoint set
-        for(int cellNo = 0; cellNo < n; cellNo++){
+        for(int cellNo = 0; cellNo <n*n; cellNo++){
             mx = Math.max(mx, ds.size.get(ds.findUPar(cellNo)));
         }
         return mx; // Return the largest island size
