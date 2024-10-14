@@ -17,8 +17,8 @@ class Solution {
                 cnt--;
                 j++;
             }
-                cnt++;
-                i++;
+             cnt++;
+             i++;
         }
         return cnt;
     }
