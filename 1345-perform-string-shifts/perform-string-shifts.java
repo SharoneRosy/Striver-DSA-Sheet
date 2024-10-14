@@ -1,25 +1,18 @@
 class Solution {
-  public String stringShift(String string, int[][] shift) {
-    
-    // Add up the left shifts and right shifts.
-    int[] overallShifts = new int[2];
+  public String stringShift(String s, int[][] shift) {
+
+    // Count the number of left shifts. A right shift is a negative left shift.
+    int leftShifts = 0;
     for (int[] move : shift) {
-      overallShifts[move[0]] += move[1];
-    }
-    int leftShifts = overallShifts[0];
-    int rightShifts = overallShifts[1];
-      
-    // Determine which shift (if any) to perform.
-    int len = string.length();
-    if (leftShifts > rightShifts) {
-      leftShifts = (leftShifts - rightShifts) % len;
-      string = string.substring(leftShifts) + string.substring(0, leftShifts);
-    }
-    else if (rightShifts > leftShifts) {
-      rightShifts = (rightShifts - leftShifts) % len;
-      string = string.substring(len - rightShifts) + string.substring(0, len - rightShifts);
+      if (move[0] == 1) {
+        move[1] = - move[1];
+      }
+      leftShifts += move[1];
     }
     
-    return string;
+    // Convert back to a positive, do left shifts, and return.
+    leftShifts = Math.floorMod(leftShifts, s.length());
+    s = s.substring(leftShifts) + s.substring(0, leftShifts);
+    return s;
   }
 }
