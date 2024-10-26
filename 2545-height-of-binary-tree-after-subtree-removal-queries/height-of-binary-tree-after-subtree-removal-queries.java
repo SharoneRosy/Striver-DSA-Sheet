@@ -1,68 +1,57 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
 class Solution {
+    public int findheight(TreeNode root,int level,int[] node_level,int [] node_height,int [][] top_two){
+        if(root==null) return 0;
+        int height=1+Math.max(findheight(root.left,level+1,node_level,node_height,top_two)
+                        ,findheight(root.right,level+1,node_level,node_height,top_two));
+        node_level[root.val]=level;
+        node_height[root.val]=height;
 
+        if(height>top_two[level][0]){
+            top_two[level][1]=top_two[level][0];
+            top_two[level][0]=height;
+        }else if(height>top_two[level][1]){
+            top_two[level][1]=height;
+        }
+        return height;
+    }
     public int[] treeQueries(TreeNode root, int[] queries) {
-        Map<Integer, Integer> resultMap = new HashMap<>();
-        Map<TreeNode, Integer> heightCache = new HashMap<>();
+        int n=100001;
+        int[] node_level=new int[n];
+        Arrays.fill(node_level,-1);
+        int [] node_height=new int[n];
+        Arrays.fill(node_height,0);
+        int [][] top_two=new int[n][2];
+        for(int [] row:top_two) Arrays.fill(row,0);
 
-        // Run DFS to fill resultMap with maximum heights after each query
-        dfs(root, 0, 0, resultMap, heightCache);
+        findheight(root,0,node_level,node_height,top_two);
 
-        int[] result = new int[queries.length];
-        for (int i = 0; i < queries.length; i++) {
-            result[i] = resultMap.get(queries[i]);
+        int res[]=new int[queries.length];
+        int j=0;
+        for(int i:queries){
+            int level=node_level[i];
+            int height=node_height[i];
+            
+            int max_height=(top_two[level][0]==height)
+                            ?top_two[level][1]:top_two[level][0];
+            
+            res[j]=max_height+level-1;
+            j++;
         }
-        return result;
-    }
-
-    // Function to calculate the height of the tree
-    private int height(TreeNode node, Map<TreeNode, Integer> heightCache) {
-        if (node == null) {
-            return -1;
-        }
-
-        // Return cached height if already calculated
-        if (heightCache.containsKey(node)) {
-            return heightCache.get(node);
-        }
-
-        int h =
-            1 +
-            Math.max(
-                height(node.left, heightCache),
-                height(node.right, heightCache)
-            );
-        heightCache.put(node, h);
-        return h;
-    }
-
-    // DFS to precompute the maximum values after removing the subtree
-    private void dfs(
-        TreeNode node,
-        int depth,
-        int maxVal,
-        Map<Integer, Integer> resultMap,
-        Map<TreeNode, Integer> heightCache
-    ) {
-        if (node == null) {
-            return;
-        }
-
-        resultMap.put(node.val, maxVal);
-
-        // Traverse left and right subtrees while updating max values
-        dfs(
-            node.left,
-            depth + 1,
-            Math.max(maxVal, depth + 1 + height(node.right, heightCache)),
-            resultMap,
-            heightCache
-        );
-        dfs(
-            node.right,
-            depth + 1,
-            Math.max(maxVal, depth + 1 + height(node.left, heightCache)),
-            resultMap,
-            heightCache
-        );
+        return res;
     }
 }
