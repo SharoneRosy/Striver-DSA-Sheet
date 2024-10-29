@@ -1,30 +1,39 @@
 class Solution {
-    private int solve(int i, int j, int[][] grid, int[][] dp) {
-        if (j == grid[0].length - 1) return 0;
-        if (dp[i][j] != -1) return dp[i][j];
-
-        int maxMoves = 0;
-        for (int row = -1; row <= 1; row++) {
-            int newI = i + row;
-            if (newI >= 0 && newI < grid.length && grid[newI][j + 1] > grid[i][j]) {
-                maxMoves = Math.max(maxMoves, 1 + solve(newI, j + 1, grid, dp));
-            }
-        }
-
-        return dp[i][j] = maxMoves;
-    }
-
     public int maxMoves(int[][] grid) {
         int m = grid.length;
         int n = grid[0].length;
         int[][] dp = new int[m][n];
-        for (int[] row : dp) Arrays.fill(row, -1);
-
-        int maxMoves = 0;
-        for (int i = 0; i < m; i++) {
-            maxMoves = Math.max(maxMoves, solve(i, 0, grid, dp));
+        
+        // Fill dp with -1 to mark unvisited cells
+        for(int i = 0; i < m; i++) {
+            for(int j = 0; j < n; j++) {
+                dp[i][j] = -1;
+            }
         }
-
+        
+        // First column cells can make 0 moves initially
+        for(int i = 0; i < m; i++) {
+            dp[i][0] = 0;
+        }
+        
+        int maxMoves = 0;
+        
+        // Process column by column
+        for(int j = 0; j < n-1; j++) {
+            for(int i = 0; i < m; i++) {
+                if(dp[i][j] != -1) {  // If this cell is reachable
+                    // Try all three possible moves
+                    for(int k = -1; k <= 1; k++) {
+                        int newRow = i + k;
+                        if(newRow >= 0 && newRow < m && grid[newRow][j+1] > grid[i][j]) {
+                            dp[newRow][j+1] = Math.max(dp[newRow][j+1], dp[i][j] + 1);
+                            maxMoves = Math.max(maxMoves, dp[newRow][j+1]);
+                        }
+                    }
+                }
+            }
+        }
+        
         return maxMoves;
     }
 }
