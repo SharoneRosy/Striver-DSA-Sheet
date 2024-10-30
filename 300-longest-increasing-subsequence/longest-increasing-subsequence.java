@@ -48,38 +48,3 @@ class Solution{
         return low;
     }
 }
-// class Solution {
-//     public int lengthOfLIS(int[] nums) {
-//         if (nums == null || nums.length == 0) {
-//             return 0;
-//         }
-//         int[] dp = new int[nums.length];
-//         int len = 0;         
-//         dp[len++] = nums[0];
-//         for (int i = 1; i < nums.length; i++) {
-//             if (nums[i] > dp[len - 1]) {
-//                 dp[len++] = nums[i];
-//             } else {
-//                 int pos = lowerBound(dp, 0, len - 1, nums[i]);
-//                 dp[pos] = nums[i];
-//             }
-//         }    
-//         return len;
-//     }
-    
-//     // Binary search to find lower bound (first element >= target)
-//     private int lowerBound(int[] arr, int start, int end, int target) {
-//         while (start <= end) {
-//             int mid = start + (end - start) / 2;
-            
-//             if (arr[mid] == target) {
-//                 return mid;
-//             } else if (arr[mid] < target) {
-//                 start = mid + 1;
-//             } else {
-//                 end = mid - 1;
-//             }
-//         }
-//         return start;
-//     }
-// }
