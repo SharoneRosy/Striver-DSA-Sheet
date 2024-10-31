@@ -21,7 +21,20 @@ class Solution {
 
         int m=robot.size(),n=factorypos.size();
         long dp[][]=new long[m+1][n+1];
-        for(long [] row:dp) Arrays.fill(row,-1);
-        return memo(0,0,robot,factorypos,dp);
+        // for(long [] row:dp) Arrays.fill(row,-1);
+
+        // return memo(0,0,robot,factorypos,dp);
+
+        for(int i=0;i<m;i++){
+            dp[i][n]=(long)1e12;
+        }
+        for(int i=m-1;i>=0;i--){
+            for(int j=n-1;j>=0;j--){
+                long pick=Math.abs(robot.get(i)-factorypos.get(j)) +dp[i+1][j+1];
+                long notpick=dp[i][j+1];
+                dp[i][j]=Math.min(pick,notpick);
+            }
+        }
+        return dp[0][0];
         }
 }
