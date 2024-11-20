@@ -5,7 +5,7 @@ class Solution {
         for(char ch:s.toCharArray()) arr[ch-'a']++;
 
         if(arr[0]<k || arr[1]<k || arr[2]<k) return -1;
-        
+
         int left=0,right=0;
         int minwindow=n;
 
