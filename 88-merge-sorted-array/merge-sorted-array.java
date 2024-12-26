@@ -1,20 +1,19 @@
-class Solution {
-    public void merge(int[] nums1, int m, int[] nums2, int n) {
-        int p=m-1;
-        int q=n-1;
-        int l=m+n-1;
-        int curr=0;
-        while(p>=0 || q>=0){
-            if(p<0) {
-                curr=nums2[q--];
-            }else if(q<0){
-                curr=nums1[p--];
-            }else if(nums1[p]<nums2[q]){
-                curr=nums2[q--];
+
+class Solution{
+    public void merge(int [] nums1,int m,int [] nums2,int n){
+        int i=m-1;
+        int j=n-1;
+        int l=nums1.length-1;
+        while(i>=0 || j>=0){
+            if(i<0){
+                nums1[l--]=nums2[j--];
+            }else if(j<0){
+                nums1[l--]=nums1[i--];
+            }else if(nums1[i]>=nums2[j]){
+                nums1[l--]=nums1[i--];
             }else{
-                curr=nums1[p--];
+                nums1[l--]=nums2[j--];
             }
-            nums1[l--]=curr;
         }
     }
 }
