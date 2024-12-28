@@ -7,11 +7,11 @@ class Solution {
         int sum=0;
         while(i<j){
             if(leftMax<=rightMax){
-                sum+=(leftMax-height[i]);
+                sum+=leftMax-height[i];
                 i++;
                 leftMax=Math.max(leftMax,height[i]);
             }else{
-                sum+=(rightMax-height[j]);
+                sum+=rightMax-height[j];
                 j--;
                 rightMax=Math.max(rightMax,height[j]);
             }
