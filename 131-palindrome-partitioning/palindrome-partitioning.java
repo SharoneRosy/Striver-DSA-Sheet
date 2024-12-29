@@ -1,8 +1,7 @@
 class Solution {
-    public void solve(String s,int ind,List<String>list,List<List<String>>ans){
+    public void  solve(String s, int ind,List<String>list,List<List<String>>ans){
         if(ind==s.length()){
             ans.add(new ArrayList<>(list));
-            return ;
         }
         for(int i=ind;i<s.length();i++){
             if(isPalli(s,ind,i)){
@@ -13,9 +12,14 @@ class Solution {
         }
     }
     public boolean isPalli(String s, int start,int end){
-        if(start>end)return true;
-        if(s.charAt(start)!=s.charAt(end)) return false;
-        return isPalli(s,start+1,end-1);
+        while(start<=end){
+            if(s.charAt(start)!=s.charAt(end)){
+                return false;
+            }
+            start++;
+            end--;
+        }
+        return true;
     }
     public List<List<String>> partition(String s) {
         List<List<String>>ans=new ArrayList<>();
