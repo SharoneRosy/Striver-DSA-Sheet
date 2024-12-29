@@ -1,6 +1,5 @@
 class Solution {
-
-    public void solve(int[] nums,int ind,List<Integer>list,List<List<Integer>>ans ){
+    public void solve(int []nums,int ind,List<Integer>list,List<List<Integer>>ans){
         ans.add(new ArrayList<>(list));
         for(int i=ind;i<nums.length;i++){
             if(i!=ind && nums[i]==nums[i-1]) continue;
