@@ -1,18 +1,17 @@
 class Solution {
     public void solve(int ind,int [] arr, List<List<Integer>>ans){
-        if(ind==arr.length){
-            List<Integer>ds=new ArrayList<>();
-            for(int i=0;i<arr.length;i++){
-                ds.add(arr[i]);
-            }
-            ans.add(new ArrayList<>(ds));
+       if(ind==arr.length){
+        List<Integer>list=new ArrayList<>();
+        for(int i:arr){
+            list.add(i);
         }
-        for(int i=ind;i<arr.length;i++){
-            swap(i,ind,arr);
-            solve(ind+1,arr,ans);
-            swap(i,ind,arr);
-        }
-
+        ans.add(list);
+       }
+       for(int i=ind;i<arr.length;i++){
+        swap(i,ind,arr);
+        solve(ind+1,arr,ans);
+        swap(i,ind,arr);
+       }
     }
     public void swap(int i,int j,int [] nums){
        int temp=nums[i];
