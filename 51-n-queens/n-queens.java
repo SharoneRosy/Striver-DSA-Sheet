@@ -1,5 +1,5 @@
 class Solution {
-    public static  void solve(char [][] board, int r,List<int []>queens,List<List<String>>res){
+    public static void solve(char [][] board,int r,List<int []>queens, List<List<String>>res){
         if(queens.size()==board.length){
             List<String>rows=new ArrayList<>();
             for(char [] row:board){
@@ -18,8 +18,8 @@ class Solution {
             }
         }
     }
-    public static boolean canAddQueen(int r,int c,List<int []>queens){
-        for(int [] q:queens){
+    public static boolean canAddQueen(int r,int c,List<int[]>queens){
+        for(int []q:queens){
             int dr=Math.abs(r-q[0]);
             int dc=Math.abs(c-q[1]);
             if(dr==0 || dc==0 || dr==dc){
@@ -30,7 +30,7 @@ class Solution {
     }
     public List<List<String>> solveNQueens(int n) {
         List<List<String>>res=new ArrayList<>();
-        char [][] board=new char[n][n];
+        char [][]board=new char[n][n];
         for(int i=0;i<n;i++){
             for(int j=0;j<n;j++){
                 board[i][j]='.';
