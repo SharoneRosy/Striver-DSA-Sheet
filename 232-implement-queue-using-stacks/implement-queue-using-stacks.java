@@ -1,72 +1,39 @@
 class MyQueue {
+
     Stack<Integer> stack;
-    
-    /**
-     * Initialize single stack in constructor
-     */
     public MyQueue() {
-        this.stack = new Stack<>();
+        stack = new Stack<>();
     }
     
-    /**
-     * Push element directly to stack
-     * Time complexity: O(1)
-     */
     public void push(int x) {
+        Stack<Integer> tempStack = new Stack<>();
+        while(!stack.isEmpty()) {
+            tempStack.push(stack.pop());
+        }
         stack.push(x);
+        while(!tempStack.isEmpty()) {
+            stack.push(tempStack.pop());
+        }
     }
     
-    /**
-     * Remove and return the first element (bottom of stack)
-     * Uses recursive approach to reach bottom element
-     * Time complexity: O(n) where n is number of elements
-     */
     public int pop() {
-        // If only one element, simply pop it
-        if (stack.size() == 1) {
-            return stack.pop();
-        }
-        
-        // Remove top element and store it
-        int top = stack.pop();
-        
-        // Recursively reach the bottom element
-        int first = pop();
-        
-        // Push back the removed element
-        stack.push(top);
-        
-        return first;
+        return stack.pop();
     }
     
-    /**
-     * View the first element (bottom of stack) without removing it
-     * Uses recursive approach similar to pop()
-     * Time complexity: O(n) where n is number of elements
-     */
     public int peek() {
-        // If only one element, just peek it
-        if (stack.size() == 1) {
-            return stack.peek();
-        }
-        
-        // Remove top element and store it
-        int top = stack.pop();
-        
-        // Recursively reach the bottom element
-        int first = peek();
-        
-        // Push back the removed element
-        stack.push(top);
-        
-        return first;
+        return stack.peek();
     }
     
-    /**
-     * Check if queue is empty
-     * Time complexity: O(1)
-     */
     public boolean empty() {
         return stack.isEmpty();
     }
 }
+
+/**
+ * Your MyQueue object will be instantiated and called as such:
+ * MyQueue obj = new MyQueue();
+ * obj.push(x);
+ * int param_2 = obj.pop();
+ * int param_3 = obj.peek();
+ * boolean param_4 = obj.empty();
+ */
