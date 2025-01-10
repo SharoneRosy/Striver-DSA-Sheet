@@ -13,10 +13,8 @@
  *     }
  * }
  */
-
-
-class Solution{
-    public List<Integer> inorderTraversal(TreeNode root){
+class Solution {
+    public List<Integer> inorderTraversal(TreeNode root) {
         List<Integer>res=new ArrayList<>();
         TreeNode curr=root;
         TreeNode pre;
@@ -34,6 +32,7 @@ class Solution{
                 curr=curr.left;
                 temp.left=null;
             }
-        }return res;
+        }
+        return res;
     }
 }
