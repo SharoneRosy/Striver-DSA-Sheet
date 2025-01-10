@@ -24,13 +24,17 @@ class Solution {
                 curr=curr.right;
             }else{
                 pre=curr.left;
-                while(pre.right!=null){
+                while(pre.right!=null && pre.right!=curr){
                     pre=pre.right;
                 }
-                pre.right=curr;
-                TreeNode temp=curr;
-                curr=curr.left;
-                temp.left=null;
+                if(pre.right==null){
+                    pre.right=curr;
+                    curr=curr.left;
+                }else{
+                    pre.right=null;
+                    res.add(curr.val);
+                    curr=curr.right;
+                }
             }
         }
         return res;
