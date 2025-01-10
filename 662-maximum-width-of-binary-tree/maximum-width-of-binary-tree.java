@@ -22,9 +22,10 @@ class Pair{
     }
 }
 class Solution {
+
     public int widthOfBinaryTree(TreeNode root) {
-        if(root==null) return 0;
         Queue<Pair>q=new LinkedList<>();
+        if(root==null) return 0;
         q.add(new Pair(root,0));
         int ans=0;
         while(!q.isEmpty()){
@@ -39,8 +40,8 @@ class Solution {
                 if(i==size-1) last=curr_id;
                 if(node.left!=null) q.add(new Pair(node.left,curr_id*2+1));
                 if(node.right!=null) q.add(new Pair(node.right,curr_id*2+2));
-             }
-             ans=Math.max(ans,last-first+1);
+            }
+            ans=Math.max(ans,last-first+1);
         }
         return ans;
     }
