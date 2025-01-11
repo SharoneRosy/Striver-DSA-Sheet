@@ -13,9 +13,10 @@
  *     }
  * }
  */
-class Solution {
+
+class Solution{
     int index=0;
-    public TreeNode bstFromPreorder(int[] preorder) {
+    public TreeNode bstFromPreorder(int [] preorder){
         return generate_bst(preorder,Integer.MAX_VALUE);
     }
     public TreeNode generate_bst(int [] preorder,int bound){
