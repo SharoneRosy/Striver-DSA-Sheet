@@ -44,7 +44,6 @@ public boolean findTarget(TreeNode root, int k) {
     BSTIterator left = new BSTIterator(root,false);
     BSTIterator right = new BSTIterator(root,true);
     
-	//Taking the first element of the ascending and descending traversals.
     int i = left.next();
     int j = right.next();
     
