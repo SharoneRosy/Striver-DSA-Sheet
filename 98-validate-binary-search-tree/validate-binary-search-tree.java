@@ -14,6 +14,7 @@
  * }
  */
 
+
 class Solution{
     public boolean solve(TreeNode root, long min,long max){
         if(root==null) return true;
