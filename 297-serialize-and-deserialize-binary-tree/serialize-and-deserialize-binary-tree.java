@@ -15,16 +15,15 @@ public class Codec {
         if(root==null) return "";
         Queue<TreeNode>q=new LinkedList<>();
         q.add(root);
-       
         while(!q.isEmpty()){
-            TreeNode temp=q.poll();
-            if(temp==null){
+            TreeNode curr=q.poll();
+            if(curr==null){
                 s.append("null ");
                 continue;
             }
-            s.append(temp.val+" ");
-            q.add(temp.left);
-            q.add(temp.right);
+            s.append(curr.val+" ");
+            q.add(curr.left);
+            q.add(curr.right);
         }
         return s.toString();
     }
@@ -33,10 +32,11 @@ public class Codec {
     public TreeNode deserialize(String data) {
         if(data=="") return null;
         Queue<TreeNode>q=new LinkedList<>();
-        String []values=data.split(" ");
-        TreeNode root =new TreeNode(Integer.parseInt(values[0]));
+        String [] values=data.split(" ");
+        TreeNode root=new TreeNode(Integer.parseInt(values[0]));
         q.add(root);
-        for(int i=1;i<values.length;i++){
+        for(int i=1;i<values.length;i++)
+        {
             TreeNode parent=q.poll();
             if(!values[i].equals("null")){
                 TreeNode left=new TreeNode(Integer.parseInt(values[i]));
