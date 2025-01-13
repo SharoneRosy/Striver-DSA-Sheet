@@ -13,15 +13,12 @@ class Solution {
         if(head==null || head.next==null) return head;
         ListNode dummy=new ListNode(-1);
         dummy.next=head;
-
         ListNode curr=dummy,nex=dummy,prev=dummy;
-
         int cnt=0;
         while(curr.next!=null){
             cnt++;
             curr=curr.next;
         }
-
         while(cnt>=k){
             curr=prev.next;
             nex=curr.next;
