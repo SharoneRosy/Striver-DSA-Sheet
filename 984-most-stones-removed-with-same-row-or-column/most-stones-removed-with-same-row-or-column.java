@@ -1,62 +1,81 @@
+import java.util.*;
+
 class Solution {
     public int removeStones(int[][] stones) {
-        int n = stones.length;
-        int maxRow = 0;
-        int maxCol = 0;
-        for (int i = 0; i < n; i++) {
-            maxRow = Math.max(maxRow, stones[i][0]);
-            maxCol = Math.max(maxCol, stones[i][1]);
-        }
-        DisjointSet_BySize ds = new DisjointSet_BySize(maxRow + maxCol + 1);
-    
-        for (int i = 0; i < n; i++) {
-            int nodeRow = stones[i][0];
-            int nodeCol = stones[i][1] + maxRow + 1;
-            ds.unionBySize(nodeRow, nodeCol);
+        int totalStones = stones.length;
+        int maxRow = 0, maxCol = 0;
+
+        // Find the maximum row and column indices for Union-Find size
+        for (int[] stone : stones) {
+            maxRow = Math.max(maxRow, stone[0]);
+            maxCol = Math.max(maxCol, stone[1]);
         }
 
-        int numberOfComponents = 0;
-        for (int i=0; i < ds.parent.size(); i++) {
-            if (ds.parent.get(i) == i && ds.size.get(i)>1) {
-                numberOfComponents++;
+        // Initialize Union-Find
+        DisjointSet ds = new DisjointSet(maxRow + maxCol + 1);
+        Map<Integer, Integer> uniqueNodes = new HashMap<>();
+
+        // Union stones based on row and column
+        for (int[] stone : stones) {
+            int rowNode = stone[0];
+            int colNode = stone[1] + maxRow + 1; // Offset column indices
+            ds.unionBySize(rowNode, colNode);
+            uniqueNodes.put(rowNode, 1); // Track unique nodes
+            uniqueNodes.put(colNode, 1);
+        }
+
+        // Count the number of connected components
+        int componentCount = 0;
+        for (int node : uniqueNodes.keySet()) {
+            if (ds.findParent(node) == node) {
+                componentCount++;
             }
         }
-        return n - numberOfComponents;
+
+        // Maximum stones removed = total stones - number of connected components
+        return totalStones - componentCount;
     }
 }
 
-class DisjointSet_BySize {
+class DisjointSet {
+    private List<Integer> parent;
+    private List<Integer> size;
 
-	List<Integer> parent = new ArrayList<>();
-	List<Integer> size = new ArrayList<>();
+    public DisjointSet(int totalNodes) {
+        parent = new ArrayList<>(totalNodes + 1);
+        size = new ArrayList<>(totalNodes + 1);
 
-	public DisjointSet_BySize(int n) {
-		for (int i = 0; i <= n; i++) {
-			parent.add(i);
-			size.add(1);
-		}
-	}
+        // Initialize parent and size for each node
+        for (int i = 0; i <= totalNodes; i++) {
+            parent.add(i);
+            size.add(1);
+        }
+    }
 
-	public int findUPar(int node) {
-		if (node == parent.get(node)) {
-			return node;
-		}
-		int ulp = findUPar(parent.get(node));
-		parent.set(node, ulp);
-		return parent.get(node);
-	}
+    // Find parent of a node with path compression
+    public int findParent(int node) {
+        if (parent.get(node) == node) {
+            return node;
+        }
+        int root = findParent(parent.get(node));
+        parent.set(node, root); // Path compression
+        return root;
+    }
 
-	public void unionBySize(int u, int v) {
-		int ulp_u = findUPar(u);
-		int ulp_v = findUPar(v);
-		if (ulp_u == ulp_v)
-			return;
-		if (size.get(ulp_u) < size.get(ulp_v)) {
-			parent.set(ulp_u, ulp_v);
-			size.set(ulp_v, size.get(ulp_v) + size.get(ulp_u));
-		} else {
-			parent.set(ulp_v, ulp_u);
-			size.set(ulp_u, size.get(ulp_u) + size.get(ulp_v));
-		}
-	}
+    // Union two nodes by size
+    public void unionBySize(int node1, int node2) {
+        int root1 = findParent(node1);
+        int root2 = findParent(node2);
+
+        if (root1 != root2) {
+            // Attach the smaller tree to the larger tree
+            if (size.get(root1) < size.get(root2)) {
+                parent.set(root1, root2);
+                size.set(root2, size.get(root2) + size.get(root1));
+            } else {
+                parent.set(root2, root1);
+                size.set(root1, size.get(root1) + size.get(root2));
+            }
+        }
+    }
 }
