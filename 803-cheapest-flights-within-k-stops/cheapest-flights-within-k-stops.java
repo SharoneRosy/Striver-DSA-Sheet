@@ -1,82 +1,62 @@
+import java.util.*;
 class Pair {
-    int first;
-    int second;
+    int city, cost;
 
-    Pair(int first, int second) {
-        this.first = first;
-        this.second = second;
+    Pair(int city, int cost) {
+        this.city = city;
+        this.cost = cost;
     }
 }
-
 class Tuple {
-    int first;
-    int second;
-    int third;
+    int stops, city, cost;
 
-    Tuple(int first, int second, int third) {
-        this.first = first;
-        this.second = second;
-        this.third = third;
+    Tuple(int stops, int city, int cost) {
+        this.stops = stops;
+        this.city = city;
+        this.cost = cost;
     }
 }
-
 class Solution {
     public int findCheapestPrice(int n, int[][] flights, int src, int dst, int k) {
-        
-        // Create an adjacency list to represent the graph.
-        ArrayList<ArrayList<Pair>> adj = new ArrayList<>();
-
+        // Step 1: Build the adjacency list
+        List<List<Pair>> adjList = new ArrayList<>();
         for (int i = 0; i < n; i++) {
-            adj.add(new ArrayList<>());
+            adjList.add(new ArrayList<>());
+        }
+        for (int[] flight : flights) {
+            adjList.get(flight[0]).add(new Pair(flight[1], flight[2]));
         }
 
-        int m = flights.length;
-
-        // Populate the adjacency list with flight information.
-        for (int i = 0; i < m; i++) {
-            adj.get(flights[i][0]).add(new Pair(flights[i][1], flights[i][2]));
-        }
-
-        // Initialize a queue for BFS and an array to store minimum distances.
-        Queue<Tuple> q = new LinkedList<>();
-        q.add(new Tuple(0, src, 0)); 
-        int dist[] = new int[n];
-
-        for (int i = 0; i < n; i++) {
-            dist[i] = Integer.MAX_VALUE;
-        }
-
-        // The distance from the source to itself is zero.
+        // Step 2: Initialize distance array and BFS queue
+        int[] dist = new int[n];
+        Arrays.fill(dist, Integer.MAX_VALUE);
         dist[src] = 0;
 
-        // Perform BFS to find the shortest path.
-        while (!q.isEmpty()) {
-            Tuple it = q.peek();
-            q.poll();
+        Queue<Tuple> queue = new LinkedList<>();
+        queue.add(new Tuple(0, src, 0)); // {stops, city, cost}
 
-            int stop = it.first;
-            int node = it.second;
-            int cost = it.third;
+        // Step 3: BFS traversal
+        while (!queue.isEmpty()) {
+            Tuple current = queue.poll();
+            int stops = current.stops;
+            int city = current.city;
+            int cost = current.cost;
 
-            // If the number of stops exceeds k, skip this node.
-            if (stop > k) continue;
+            // If stops exceed k, skip
+            if (stops > k) continue;
 
-            for (Pair iter : adj.get(node)) {
-                int adjNode = iter.first;
-                int edW = iter.second;
+            // Explore neighbors
+            for (Pair neighbor : adjList.get(city)) {
+                int nextCity = neighbor.city;
+                int nextCost = neighbor.cost;
 
-                // If the current path is shorter, update the distance and add to the queue.
-                if (cost + edW < dist[adjNode] && stop <= k) {
-                    dist[adjNode] = cost + edW;
-                    q.add(new Tuple(stop + 1, adjNode, cost + edW));
+                // If a cheaper path is found, update and add to queue
+                if (cost + nextCost < dist[nextCity]) {
+                    dist[nextCity] = cost + nextCost;
+                    queue.add(new Tuple(stops + 1, nextCity, cost + nextCost));
                 }
             }
         }
-        
-        // If there is no valid path to the destination, return -1.
-        if (dist[dst] == Integer.MAX_VALUE) return -1;
-
-        // Return the minimum cost to reach the destination.
-        return dist[dst];
+        return dist[dst] == Integer.MAX_VALUE ? -1 : dist[dst];
     }
 }
