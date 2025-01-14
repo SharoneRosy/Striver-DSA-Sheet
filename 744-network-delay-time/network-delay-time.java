@@ -1,57 +1,50 @@
+import java.util.*;
+
 class Solution {
-    class edge{
-        int src,dest,wt;
-        public edge(int src,int dest,int wt){
-            this.src=src;
-            this.dest=dest;
-            this.wt=wt;
+    public int networkDelayTime(int[][] times, int n, int k) {
+        List<List<int[]>> graph = new ArrayList<>();
+        for (int i = 0; i <= n; i++) {
+            graph.add(new ArrayList<>());
         }
-    }
-    public int dijkstras(ArrayList<edge>[] graph,int src){
-        int dist[] = new int[graph.length+1];
-        boolean vis[] = new boolean[graph.length+1];
-        for(int i=0;i<dist.length;i++){
-            if(i!=src){
-                dist[i] =Integer.MAX_VALUE;
-            }
+        for (int[] time : times) {
+            graph.get(time[0]).add(new int[]{time[1], time[2]}); // {destination, weight}
         }
-        PriorityQueue<Pair<Integer,Integer>> pq = new PriorityQueue<>((a,b)->(Integer.compare(a.getValue(),b.getValue())));
-        pq.add(new Pair(src,0));
-        while(!pq.isEmpty()){
-            Pair<Integer,Integer> p = pq.remove();
-            int curr=p.getKey();
-            int d=p.getValue();
-            if(!vis[curr]){
-                vis[curr]=true;
-                for(int i=0;i<graph[curr].size();i++){
-                    edge e = graph[curr].get(i);
-                    int v = e.src;
-                    int u = e.dest;
-                    int w = e.wt;
-                    if((dist[v]+w)<dist[u]){
-                        dist[u] = dist[v]+w;
-                        pq.add(new Pair(u,dist[u]));
-                    }
+
+        // Step 2: Initialize the priority queue and distance array
+        PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> a[1] - b[1]); // {node, time}
+        int[] dist = new int[n + 1];
+        Arrays.fill(dist, Integer.MAX_VALUE);
+        dist[k] = 0;
+
+        // Add the source node to the queue
+        pq.add(new int[]{k, 0});
+
+        // Step 3: Process the graph using Dijkstra's algorithm
+        while (!pq.isEmpty()) {
+            int[] current = pq.poll();
+            int node = current[0];
+            int time = current[1];
+
+            // Skip if we have already found a shorter path
+            if (time > dist[node]) continue;
+
+            // Update the distances for neighbors
+            for (int[] neighbor : graph.get(node)) {
+                int nextNode = neighbor[0];
+                int edgeWeight = neighbor[1];
+                if (time + edgeWeight < dist[nextNode]) {
+                    dist[nextNode] = time + edgeWeight;
+                    pq.add(new int[]{nextNode, dist[nextNode]});
                 }
             }
         }
-        int maxDist = 0;
-        for (int i = 1; i < graph.length; i++) {
-            if (dist[i] == Integer.MAX_VALUE) return Integer.MAX_VALUE;
-            maxDist = Math.max(maxDist, dist[i]);
-        }
-        return maxDist;
 
-    }
-    public int networkDelayTime(int[][] times, int n, int k) {
-        ArrayList<edge>[] graph=new ArrayList[n+1];
-        for(int i=0;i<n+1;i++){
-            graph[i] = new ArrayList<>();
+        // Step 4: Find the maximum time to reach all nodes
+        int maxTime = 0;
+        for (int i = 1; i <= n; i++) {
+            if (dist[i] == Integer.MAX_VALUE) return -1; // Some nodes are unreachable
+            maxTime = Math.max(maxTime, dist[i]);
         }
-         for (int[] time : times) {
-            graph[time[0]].add(new edge(time[0], time[1], time[2]));
-        }
-        int result = dijkstras(graph, k);
-        return result == Integer.MAX_VALUE ? -1 : result;
+        return maxTime;
     }
 }
