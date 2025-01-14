@@ -1,48 +1,68 @@
-class Pair{
-    long dis;
-    long node;
-    public Pair(long dis,long node){
-        this.dis=dis;
-        this.node=node;
+import java.util.*;
+class Pair {
+    long distance;
+    int node;
+
+    Pair(long distance, int node) {
+        this.distance = distance;
+        this.node = node;
     }
 }
+
 class Solution {
     public int countPaths(int n, int[][] roads) {
-        ArrayList<ArrayList<Pair>> adj = new ArrayList<>();
-        for(int i=0;i<n;i++){
-            adj.add(new ArrayList<>());
+        final int MOD = 1_000_000_007;
+
+        // Step 1: Build the adjacency list
+        List<List<Pair>> graph = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            graph.add(new ArrayList<>());
         }
-        for(int i=0;i<roads.length;i++){
-            adj.get(roads[i][0]).add(new Pair(roads[i][2],roads[i][1]));
-            adj.get(roads[i][1]).add(new Pair(roads[i][2],roads[i][0]));
+        for (int[] road : roads) {
+            graph.get(road[0]).add(new Pair(road[2], road[1])); // {time, destination}
+            graph.get(road[1]).add(new Pair(road[2], road[0])); // {time, destination}
         }
-        PriorityQueue<Pair> pq = new PriorityQueue<>((x,y)->Long.compare(x.dis, y.dis));
-        long dis[]=new long[n];
-        long ways[]=new long[n];
-        for(int i=0;i<n;i++){
-            dis[i]=Long.MAX_VALUE;
-            ways[i]=0;
-        }
-        pq.add(new Pair(0,0));
-        dis[0]=0;
-        ways[0]=1;
-        int mod = (int) (1e9 + 7);
-        while(!pq.isEmpty()){
-            long currDis=pq.peek().dis;
-            int node=(int)(pq.peek().node);
-            pq.remove();
-            for(Pair it: adj.get(node)){
-                int adjNode = (int)it.node;
-                long edgeWeight = it.dis;
-                if(currDis+edgeWeight<dis[adjNode]){
-                    dis[adjNode]=currDis+edgeWeight;
-                    ways[adjNode]=ways[node];
-                    pq.add(new Pair(currDis+edgeWeight,adjNode));
-                }else if(currDis+edgeWeight==dis[adjNode]){
-                    ways[adjNode]= (ways[adjNode]+ways[node])%mod;
+
+        // Step 2: Initialize distances and ways arrays
+        long[] dist = new long[n];
+        Arrays.fill(dist, Long.MAX_VALUE);
+        dist[0] = 0;
+
+        int[] ways = new int[n];
+        ways[0] = 1;
+
+        // Step 3: Min-heap for Dijkstra's algorithm
+        PriorityQueue<Pair> pq = new PriorityQueue<>((a, b) -> Long.compare(a.distance, b.distance));
+        pq.add(new Pair(0, 0)); // {distance, node}
+
+        // Step 4: Process nodes
+        while (!pq.isEmpty()) {
+            Pair current = pq.poll();
+            long currentDist = current.distance;
+            int node = current.node;
+
+            // Skip if we've already processed a shorter path
+            if (currentDist > dist[node]) continue;
+
+            // Explore neighbors
+            for (Pair neighbor : graph.get(node)) {
+                long newDist = currentDist + neighbor.distance;
+                int nextNode = neighbor.node;
+
+                // Found a shorter path
+                if (newDist < dist[nextNode]) {
+                    dist[nextNode] = newDist;
+                    ways[nextNode] = ways[node];
+                    pq.add(new Pair(newDist, nextNode));
+                }
+                // Found another shortest path
+                else if (newDist == dist[nextNode]) {
+                    ways[nextNode] = (ways[nextNode] + ways[node]) % MOD;
                 }
             }
         }
-        return (int)(ways[n-1]%mod);
+
+        // Return the number of ways to reach the destination
+        return ways[n - 1];
     }
 }
