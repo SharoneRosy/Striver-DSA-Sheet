@@ -1,58 +1,61 @@
 class Solution {
-    Map<String, Integer> map = new HashMap();
-    List<List<String>> ans = new ArrayList();
-    String begin;
+    Map<String, Integer> distance = new HashMap<>();
+    List<List<String>> result = new ArrayList<>();
+    String startWord;
 
     public List<List<String>> findLadders(String beginWord, String endWord, List<String> wordList) {
-        Set<String> set = new HashSet(wordList);
-        set.remove(beginWord);
-        Queue<String> q = new LinkedList();
-        q.add(beginWord);
-        map.put(beginWord, 1);
-        begin = beginWord;
+        Set<String> wordSet = new HashSet<>(wordList);
+        wordSet.remove(beginWord);
 
-        while(!q.isEmpty()) {
-            String word = q.poll();
-            if(word.equals(endWord))  break;
+        Queue<String> queue = new LinkedList<>();
+        queue.add(beginWord);
+        distance.put(beginWord, 1);
+        startWord = beginWord;
 
-            for(int i=0; i<word.length(); i++) {
-                for(char ch='a'; ch<='z'; ch++) {
-                    char[] curr = word.toCharArray();
-                    curr[i] = ch;
-                    String replacedWord = new String(curr);
+        while (!queue.isEmpty()) {
+            String currentWord = queue.poll();
+            if (currentWord.equals(endWord)) break;
 
-                    if(set.contains(replacedWord)) {
-                        set.remove(replacedWord);
-                        q.add(replacedWord);
-                        map.put(replacedWord, map.get(word)+1);
+            for (int i = 0; i < currentWord.length(); i++) {
+                for (char ch = 'a'; ch <= 'z'; ch++) {
+                    char[] wordChars = currentWord.toCharArray();
+                    wordChars[i] = ch;
+                    String transformedWord = new String(wordChars);
+
+                    if (wordSet.contains(transformedWord)) {
+                        wordSet.remove(transformedWord);
+                        queue.add(transformedWord);
+                        distance.put(transformedWord, distance.get(currentWord) + 1);
                     }
                 }
             }
         }
-        if(map.containsKey(endWord)) {
-            List<String> seq = new ArrayList();
-            seq.add(endWord);
-            dfs(endWord, seq);
+
+        if (distance.containsKey(endWord)) {
+            List<String> path = new ArrayList<>();
+            path.add(endWord);
+            backtrack(endWord, path);
         }
-        return ans;
+
+        return result;
     }
 
-    public void dfs(String word, List<String> seq) {
-        if(word.equals(begin)) {
-            ans.add(new ArrayList(seq));
+    private void backtrack(String word, List<String> path) {
+        if (word.equals(startWord)) {
+            result.add(new ArrayList<>(path));
             return;
         }
 
-        for(int i=0; i<word.length(); i++) {
-            for(char ch='a'; ch<='z'; ch++) {
-                char[] curr = word.toCharArray();
-                curr[i] = ch;
-                String replacedWord = new String(curr);
+        for (int i = 0; i < word.length(); i++) {
+            for (char ch = 'a'; ch <= 'z'; ch++) {
+                char[] wordChars = word.toCharArray();
+                wordChars[i] = ch;
+                String transformedWord = new String(wordChars);
 
-                if(map.containsKey(replacedWord) && map.get(replacedWord) == map.get(word)-1) {
-                    seq.add(0, replacedWord);   // add replacedWord in start
-                    dfs(replacedWord, seq);
-                    seq.remove(0);              // remove replacedWord to backtrack
+                if (distance.containsKey(transformedWord) && distance.get(transformedWord) == distance.get(word) - 1) {
+                    path.add(0, transformedWord); // Add to the start of the path
+                    backtrack(transformedWord, path);
+                    path.remove(0); // Remove to backtrack
                 }
             }
         }
