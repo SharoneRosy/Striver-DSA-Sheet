@@ -1,31 +1,28 @@
 class Solution {
     public String minWindow(String s, String t) {
-        int n = s.length(), m = t.length();
-        int minLength = Integer.MAX_VALUE, count = 0;
-        int left = 0, right = 0, startIndex = -1;
-        HashMap<Character, Integer> seen = new HashMap<>();
-
-        for (char c : t.toCharArray()) {
-            seen.put(c, seen.getOrDefault(c, 0) + 1);
+        int n=s.length(),m=t.length();
+        int min=Integer.MAX_VALUE;
+        int cnt=0;
+        int startIdx=-1;
+        int l=0,r=0;
+        HashMap<Character,Integer>seen=new HashMap<>();
+        for(char c:t.toCharArray()){
+            seen.put(c,seen.getOrDefault(c,0)+1);
         }
-
-        while (right < n) {
-            if (seen.getOrDefault(s.charAt(right), 0) > 0) count++;
-            seen.put(s.charAt(right), seen.getOrDefault(s.charAt(right), 0) - 1);
-
-            while (count == m) {
-                if (right - left + 1 < minLength) {
-                    minLength = right - left + 1;
-                    startIndex = left;
+        while(r<n){
+            if(seen.getOrDefault(s.charAt(r),0)>0) cnt++;
+            seen.put(s.charAt(r),seen.getOrDefault(s.charAt(r),0)-1);
+            while(cnt==m){
+                if(r-l+1<min){
+                    min=r-l+1;
+                    startIdx=l;
                 }
-
-                seen.put(s.charAt(left), seen.getOrDefault(s.charAt(left), 0) + 1);
-                if (seen.get(s.charAt(left)) > 0) count--;
-                left++;
+                seen.put(s.charAt(l),seen.getOrDefault(s.charAt(l),0)+1);
+                if(seen.get(s.charAt(l))>0) cnt--;
+                l++;
             }
-            right++;
+            r++;
         }
-
-        return (startIndex == -1) ? "" : s.substring(startIndex, startIndex + minLength);
+        return (startIdx==-1)?"":s.substring(startIdx,startIdx+min);
     }
 }
