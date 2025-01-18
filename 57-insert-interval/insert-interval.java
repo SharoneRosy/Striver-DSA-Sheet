@@ -1,19 +1,19 @@
-class Solution {
+public class Solution {
     public int[][] insert(int[][] intervals, int[] newInterval) {
-        List<int[]>list=new ArrayList<>();
-        for(int[] in:intervals){
-            if(in[1]<newInterval[0]){
-                list.add(in);
-            }else if(in[0]>newInterval[1]){
-                  list.add(newInterval);
-                  newInterval=in;
-            }else{
-                 newInterval[0]=Math.min(in[0],newInterval[0]);
-                 newInterval[1]=Math.max(in[1],newInterval[1]);
+        List<int[]> res = new ArrayList<>();
+        for (int[] interval : intervals) {
+            if (newInterval == null || interval[1] < newInterval[0]) {
+                res.add(interval);
+            } else if (interval[0] > newInterval[1]) {
+                res.add(newInterval);
+                res.add(interval);
+                newInterval = null;
+            } else {
+                newInterval[0] = Math.min(interval[0], newInterval[0]);
+                newInterval[1] = Math.max(interval[1], newInterval[1]);
             }
         }
-        list.add(newInterval);
-        return list.toArray(new int[list.size()][]);
-
+        if (newInterval != null) res.add(newInterval);
+        return res.toArray(new int[res.size()][]);
     }
 }
