@@ -1,16 +1,5 @@
 class Solution {
-    public boolean dfs(int node,int [][]graph,int []col, int c){
-        col[node]=c;
-        for(int adjnode:graph[node]){
-            if(col[node]==col[adjnode]){
-                return false;
-            }else  if(col[adjnode]==-1 && !dfs(adjnode,graph,col,1-c)){
-                return false;
-            }
-        }
-        return true;
-    }
-    public boolean isBipartite(int[][] graph) {
+   public boolean isBipartite(int[][] graph) {
         int n=graph.length;
         int c=0;
         int []col=new int[n];
@@ -36,4 +25,5 @@ class Solution {
         }
         return true;
     }
+  
 }
