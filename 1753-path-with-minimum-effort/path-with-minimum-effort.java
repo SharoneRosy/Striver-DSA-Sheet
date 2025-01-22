@@ -1,30 +1,45 @@
+import java.util.*;
+
 class Solution {
-    int[] DIR = new int[]{0, 1, 0, -1, 0};
     public int minimumEffortPath(int[][] heights) {
-        int m = heights.length, n = heights[0].length;
-        int[][] dist = new int[m][n];
-        for (int i = 0; i < m; i++) Arrays.fill(dist[i], Integer.MAX_VALUE);
-        
-        PriorityQueue<int[]> minHeap = new PriorityQueue<>(Comparator.comparingInt(a -> a[0]));
-        minHeap.offer(new int[]{0, 0, 0}); // distance, row, col
+        int rows = heights.length, cols = heights[0].length;
+
+        // Directions for moving in 4 possible directions (up, down, left, right)
+        int[] dRow = {-1, 1, 0, 0};
+        int[] dCol = {0, 0, -1, 1};
+
+        // Min-heap for Dijkstra's algorithm
+        PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> a[0] - b[0]); // [effort, row, col]
+        pq.add(new int[]{0, 0, 0}); // Start with effort 0 at (0, 0)
+
+        // Distance array to track minimum effort to each cell
+        int[][] dist = new int[rows][cols];
+        for (int[] row : dist) Arrays.fill(row, Integer.MAX_VALUE);
         dist[0][0] = 0;
-        
-        while (!minHeap.isEmpty()) {
-            int[] top = minHeap.poll();
-            int d = top[0], r = top[1], c = top[2];
-            if (d > dist[r][c]) continue; // this is an outdated version -> skip it
-            if (r == m - 1 && c == n - 1) return d; // Reach to bottom right
+
+        while (!pq.isEmpty()) {
+            int[] curr = pq.poll();
+            int effort = curr[0], r = curr[1], c = curr[2];
+
+            // If we reach the bottom-right corner, return the effort
+            if (r == rows - 1 && c == cols - 1) return effort;
+
+            // Explore neighbors
             for (int i = 0; i < 4; i++) {
-                int nr = r + DIR[i], nc = c + DIR[i + 1];
-                if (nr >= 0 && nr < m && nc >= 0 && nc < n) {
-                    int newDist = Math.max(d, Math.abs(heights[nr][nc] - heights[r][c]));
-                    if (dist[nr][nc] > newDist) {
-                        dist[nr][nc] = newDist;
-                        minHeap.offer(new int[]{dist[nr][nc], nr, nc});
+                int nr = r + dRow[i];
+                int nc = c + dCol[i];
+
+                // Check if neighbor is within bounds
+                if (nr >= 0 && nr < rows && nc >= 0 && nc < cols) {
+                    int newEffort = Math.max(effort, Math.abs(heights[nr][nc] - heights[r][c]));
+                    if (newEffort < dist[nr][nc]) {
+                        dist[nr][nc] = newEffort;
+                        pq.add(new int[]{newEffort, nr, nc});
                     }
                 }
             }
         }
-        return 0; // Unreachable code, Java require to return interger value.
+
+        return 0; // Unreachable case
     }
 }
