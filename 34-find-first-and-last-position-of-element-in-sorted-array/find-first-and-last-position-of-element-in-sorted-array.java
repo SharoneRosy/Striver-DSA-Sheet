@@ -1,5 +1,5 @@
 class Solution {
-    public int first(int[] nums,int target){
+    public int first(int [] nums,int target){
         int low=0;
         int high=nums.length-1;
         int ans=-1;
@@ -16,7 +16,7 @@ class Solution {
         }
         return ans;
     }
-     public int last(int[] nums,int target){
+    public int last(int [] nums,int target){
         int low=0;
         int high=nums.length-1;
         int ans=-1;
@@ -38,6 +38,5 @@ class Solution {
         if(f==-1) return new int[]{-1,-1};
         int l=last(nums,target);
         return new int[]{f,l};
-
     }
 }
