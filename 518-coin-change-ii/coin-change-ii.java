@@ -17,28 +17,51 @@ class Solution {
     //     int n=coins.length;
     //     // return solve(amount,coins,n-1);
     // }
-    public int change(int amount,int [] coins){
-        int n=coins.length;
-        int dp[][]=new int[coins.length][amount+1];
+    // public int change(int amount,int [] coins){
+    //     int n=coins.length;
+    //     int dp[][]=new int[coins.length][amount+1];
 
-        for(int i=0;i<coins.length;i++){
-            dp[i][0]=1;
-        }
+    //     for(int i=0;i<coins.length;i++){
+    //         dp[i][0]=1;
+    //     }
+    //     for(int j=0;j<=amount;j++){
+    //         if(j%coins[0]==0) dp[0][j]=1;
+    //         else dp[0][j]=0;
+    //     }
+    //     for(int i=1;i<n;i++){
+    //         for(int amt=1;amt<=amount;amt++){
+    //             int notpick=dp[i-1][amt];
+    //              int pick=0;
+    //              if(amt>=coins[i]){
+    //                    pick=dp[i][amt-coins[i]];
+    //            }
+    //         dp[i][amt]=pick+notpick;
+    //         }
+    //     }
+    //     return dp[n-1][amount];
+    // }
+     public int change(int amount,int [] coins){
+        int n=coins.length;
+        int []prev=new int[amount+1];
+
         for(int j=0;j<=amount;j++){
-            if(j%coins[0]==0) dp[0][j]=1;
-            else dp[0][j]=0;
+            if(j%coins[0]==0)   prev[j]=1;
+            else prev[j]=0;
         }
         for(int i=1;i<n;i++){
-            for(int amt=1;amt<=amount;amt++){
-                int notpick=dp[i-1][amt];
+            int []curr=new int[amount+1];
+            for(int amt=0;amt<=amount;amt++){
+                int notpick=prev[amt];
                  int pick=0;
                  if(amt>=coins[i]){
-                       pick=dp[i][amt-coins[i]];
+                       pick=curr[amt-coins[i]];
                }
-            dp[i][amt]=pick+notpick;
+               curr[amt]=pick+notpick;
             }
+            prev=curr;
         }
-        return dp[n-1][amount];
+        return prev[amount];
     }
 
 }
+
