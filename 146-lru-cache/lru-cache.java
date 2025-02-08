@@ -1,74 +1,63 @@
-class ListNode {
-    int key;
-    int val;
-    ListNode next;
-    ListNode prev;
-
-    public ListNode(int key, int val) {
-        this.key = key;
-        this.val = val;
-    }
-}
-
 class LRUCache {
-    int capacity;
-    Map<Integer, ListNode> dic;
-    ListNode head;
-    ListNode tail;
+    class ListNode {
+        int key, value;
+        ListNode prev, next;
+
+        public ListNode(int key, int value) {
+            this.key = key;
+            this.value = value;
+        }
+    }
+
+    private int capacity;
+    private Map<Integer, ListNode> cache;
+    private ListNode head, tail;
 
     public LRUCache(int capacity) {
         this.capacity = capacity;
-        dic = new HashMap<>();
-        head = new ListNode(-1, -1);
-        tail = new ListNode(-1, -1);
+        cache = new HashMap<>();
+
+        head = new ListNode(-1, -1); // Dummy head
+        tail = new ListNode(-1, -1); // Dummy tail
+
         head.next = tail;
         tail.prev = head;
     }
 
     public int get(int key) {
-        if (!dic.containsKey(key)) {
-            return -1;
-        }
+        if (!cache.containsKey(key)) return -1;
 
-        ListNode node = dic.get(key);
+        ListNode node = cache.get(key);
         remove(node);
-        add(node);
-        return node.val;
+        insertAtFront(node);
+        return node.value;
     }
 
     public void put(int key, int value) {
-        if (dic.containsKey(key)) {
-            ListNode oldNode = dic.get(key);
-            remove(oldNode);
+        if (cache.containsKey(key)) {
+            remove(cache.get(key));
         }
 
-        ListNode node = new ListNode(key, value);
-        dic.put(key, node);
-        add(node);
+        ListNode newNode = new ListNode(key, value);
+        insertAtFront(newNode);
+        cache.put(key, newNode);
 
-        if (dic.size() > capacity) {
-            ListNode nodeToDelete = head.next;
-            remove(nodeToDelete);
-            dic.remove(nodeToDelete.key);
+        if (cache.size() > capacity) {
+            ListNode lruNode = tail.prev;
+            remove(lruNode);
+            cache.remove(lruNode.key);
         }
     }
 
-    public void add(ListNode node) {
-        ListNode previousEnd = tail.prev;
-        previousEnd.next = node;
-        node.prev = previousEnd;
-        node.next = tail;
-        tail.prev = node;
-    }
-
-    public void remove(ListNode node) {
+    private void remove(ListNode node) {
         node.prev.next = node.next;
         node.next.prev = node.prev;
     }
+
+    private void insertAtFront(ListNode node) {
+        node.next = head.next;
+        node.prev = head;
+        head.next.prev = node;
+        head.next = node;
+    }
 }
-/**
- * Your LRUCache object will be instantiated and called as such:
- * LRUCache obj = new LRUCache(capacity);
- * int param_1 = obj.get(key);
- * obj.put(key,value);
- */
