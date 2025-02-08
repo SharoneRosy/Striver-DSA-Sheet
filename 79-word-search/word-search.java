@@ -1,29 +1,30 @@
 class Solution {
-    int[] dr1 = {1, -1, 0, 0};
-    int[] dr2 = {0, 0, 1, -1};
+    private int[][] directions = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}}; // Directions: right, down, left, up
 
-    public boolean solve(char[][] board, int row, int col, int i, int j, String word, int ind, int n) {
-        if (ind == n - 1 && word.charAt(ind) == board[i][j]) return true;
-        for (int d = 0; d < 4; d++) {
-            int x = i + dr1[d], y = j + dr2[d];
-            if (x >= 0 && x < row && y >= 0 && y < col && board[x][y] != '.' && board[x][y] == word.charAt(ind)) {
-                char ch = board[x][y];
-                board[x][y] = '.';
-                if (ind == n - 1) return true;
-                if (solve(board, row, col, x, y, word, ind + 1, n)) return true;
-                board[x][y] = ch;
+    public boolean exist(char[][] board, String word) {
+        int rows = board.length, cols = board[0].length;
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                if (dfs(board, i, j, word, 0)) return true; // Start DFS if the first letter matches
             }
         }
         return false;
     }
 
-    public boolean exist(char[][] board, String word) {
-        int row = board.length, col = board[0].length, n = word.length();
-        for (int i = 0; i < row; i++) {
-            for (int j = 0; j < col; j++) {
-                if (solve(board, row, col, i, j, word, 0, n)) return true;
-            }
+    private boolean dfs(char[][] board, int x, int y, String word, int index) {
+        if (index == word.length()) return true; // Found the word
+        if (x < 0 || x >= board.length || y < 0 || y >= board[0].length) return false; // Out of bounds
+        if (board[x][y] != word.charAt(index)) return false; // Current cell does not match the word's current character
+
+        char temp = board[x][y]; // Save the character
+        board[x][y] = '#'; // Mark the cell as visited
+
+        for (int[] dir : directions) { // Explore all possible directions
+            int newX = x + dir[0], newY = y + dir[1];
+            if (dfs(board, newX, newY, word, index + 1)) return true; // Recur to check the next character in the word
         }
+
+        board[x][y] = temp; // Restore the original character for backtracking
         return false;
     }
 }
