@@ -16,22 +16,17 @@ class Solution {
   }
     // Prerequisite for this question------> Largest Histogram Area 
     public int largestRectangleArea(int[] heights) {
-        Stack<Integer> st=new Stack<>();
-        int area=0;
-        for(int i=0;i<=heights.length;i++){
-            while(!st.isEmpty() &&(i==heights.length || heights[i]<heights[st.peek()])){
-                int h=heights[st.pop()];
-                int r=i;
-                if(!st.isEmpty()){
-                    int l=st.peek();
-                    area=Math.max(area,h*(r-l-1));
-                }
-                else{
-                    area=Math.max(area,h*r);
-                }
+        int maxi=0;
+        Stack<Integer>st=new Stack<>();
+        int n=heights.length;
+        for(int i=0;i<=n;i++){
+            while(!st.isEmpty() && (i==n || heights[st.peek()]>heights[i])){
+                int len=heights[st.pop()];
+                int wid=st.isEmpty()?i:i-st.peek()-1;
+                maxi=Math.max(maxi,len*wid);
             }
             st.push(i);
         }
-        return area;
+        return maxi;
     }
 }
