@@ -1,28 +1,29 @@
 class Solution {
+    private int[][] memo;
+
     public int strangePrinter(String s) {
-        int[][] dp = new int[101][101];
-        for (int i = 0; i < 101; i++) {
-            Arrays.fill(dp[i], 1);
-        }
-
         int n = s.length();
-        if (n == 0) {
-            return 0;
+        memo = new int[n][n];
+        for (int[] row : memo) {
+            Arrays.fill(row, -1);
         }
+        return minPrints(s, 0, n - 1);
+    }
 
-        for (int i = 1; i < n; i++) {
-            for (int j = 0; j < n - i; j++) {
-                dp[j][j + i] = i + 1;
+    private int minPrints(String s, int i, int j) {
+        if (i > j) return 0;
+        if (i == j) return 1;
+        if (memo[i][j] != -1) return memo[i][j];
 
-                for (int k = j + 1; k <= j + i; k++) {
-                    int temp = dp[j][k - 1] + dp[k][j + i];
-                    if (s.charAt(k - 1) == s.charAt(j + i)) {
-                        temp--;
-                    }
-                    dp[j][j + i] = Math.min(temp, dp[j][j + i]);
-                }
+        int ans = minPrints(s, i, j - 1) + 1; // Assume the last character is printed separately
+
+        for (int k = i; k < j; k++) {
+            if (s.charAt(k) == s.charAt(j)) {
+                ans = Math.min(ans, minPrints(s, i, k) + minPrints(s, k + 1, j - 1));
             }
         }
-        return dp[0][n - 1];
+
+        memo[i][j] = ans;
+        return ans;
     }
 }
