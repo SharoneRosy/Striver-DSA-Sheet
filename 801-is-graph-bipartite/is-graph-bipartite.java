@@ -1,5 +1,5 @@
 class Solution {
-   public boolean isBipartite(int[][] graph) {
+    public boolean isBipartite(int[][] graph) {
         int n=graph.length;
         int c=0;
         int []col=new int[n];
@@ -13,7 +13,7 @@ class Solution {
                     int arr[]=graph[node];
                     for(int j=0;j<arr.length;j++){
                         int val=graph[node][j];
-                        if (col[val]==-1){
+                        if(col[val]==-1){
                             col[val]=1-col[node];
                             q.add(val);
                         }else if(col[val]==col[node]){
@@ -25,5 +25,4 @@ class Solution {
         }
         return true;
     }
-  
 }
