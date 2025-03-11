@@ -20,5 +20,4 @@ class Solution {
         solve(digits,res,map,sb,0);
         return res;
     }
-   
 }
