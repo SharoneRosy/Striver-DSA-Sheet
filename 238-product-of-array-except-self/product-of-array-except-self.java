@@ -1,22 +1,26 @@
 class Solution {
+
     public int[] productExceptSelf(int[] nums) {
-        if(nums.length==0 || nums==null)return nums;
-        int n=nums.length;
-        int [] p=new int[n];
-        int [] s=new int[n];
-        p[0]=1;
-        s[n-1]=1;
-        for(int i=1;i<n;i++){
-            p[i]=p[i-1]*nums[i-1];
-        }
-        for(int i=n-2;i>=0;i--){
-            s[i]=s[i+1]*nums[i+1];
+        // The length of the input array
+        int length = nums.length;
+
+        // Final answer array to be returned
+        int[] answer = new int[length];
+
+        answer[0] = 1;
+        for (int i = 1; i < length; i++) {
+            answer[i] = nums[i - 1] * answer[i - 1];
         }
 
-        int res[]=new int[n];
-        for(int i=0;i<n;i++){
-            res[i]=p[i]*s[i];
+        // R contains the product of all the elements to the right
+        // Note: for the element at index 'length - 1', there are no elements to the right,
+        // so the R would be 1
+        int R = 1;
+        for (int i = length - 1; i >= 0; i--) {
+            answer[i] = answer[i] * R;
+            R *= nums[i];
         }
-        return res;
+
+        return answer;
     }
 }
