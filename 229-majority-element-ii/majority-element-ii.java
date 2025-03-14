@@ -30,5 +30,7 @@ class Solution {
         if(cnt1>mini) ans.add(e1);
         if(cnt2>mini) ans.add(e2);
         return ans;
+
+      
     }
 }
