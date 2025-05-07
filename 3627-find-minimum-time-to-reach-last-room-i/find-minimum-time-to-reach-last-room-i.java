@@ -1,53 +1,50 @@
-class Pair {
-    int x;
-    int y;
-    int time;
-
-    public Pair(int x, int y, int time) {
-        this.x = x;
-        this.y = y;
-        this.time = time;
-    }
-}
-
 class Solution {
-    int[][] dirs = { { 1, 0 }, { -1, 0 }, { 0, 1 }, { 0, -1 } };
+
+    class Node {
+        int x;
+        int y;
+        int time;
+
+        public Node(int x, int y, int time) {
+            this.x = x;
+            this.y = y;
+            this.time = time;
+        }
+    }
 
     public int minTimeToReach(int[][] moveTime) {
-        int n = moveTime.length, m = moveTime[0].length;
-
-        int[][] dist = new int[n][m];
-        for (int[] d : dist) {
-            Arrays.fill(d, Integer.MAX_VALUE);
+        int n = moveTime.length;
+        int m = moveTime[0].length;
+        int[][]time = new int[n][m];
+        boolean[][] visited = new boolean[n][m];
+        int[][] dirs = {{-1,0}, {1,0}, {0,-1}, {0,1}};
+        for (int i=0;i<n;i++) {
+            Arrays.fill(time[i], Integer.MAX_VALUE);
         }
+        PriorityQueue<Node> pq = new PriorityQueue<>((node1, node2) -> node1.time - node2.time);
+        pq.add(new Node(0, 0, 0));
+        time[0][0] = 0;
 
-        PriorityQueue<Pair> pq = new PriorityQueue<>(
-                (a, b) -> Integer.compare(a.time, b.time));
-        pq.add(new Pair(0, 0, 0));
-        dist[0][0] = 0;
+        while(!pq.isEmpty()) {
+            Node node = pq.poll();
+            int x = node.x;
+            int y = node.y;
+            visited[x][y] = true;
 
-        while (!pq.isEmpty()) {
-            Pair top = pq.poll();
-            int x = top.x, y = top.y;
-            int time = top.time;
-
-            if (time > dist[x][y]) {
-                continue;
-            }
-
-            for (int[] d : dirs) {
-                int nx = x + d[0], ny = y + d[1];
-
-                if (nx >= 0 && nx < n && ny >= 0 && ny < m) {
-                    int nt = 1 + Math.max(time, moveTime[nx][ny]);
-
-                    if (nt < dist[nx][ny]) {
-                        dist[nx][ny] = nt;
-                        pq.offer(new Pair(nx, ny, nt));
+            for (int[] dir : dirs) {
+                int nx = x + dir[0];
+                int ny = y + dir[1];
+                if (nx >=0 && ny>=0 && nx <n && ny < m) {
+                    if (!visited[nx][ny]) {
+                        int newTime = 1 + Math.max(node.time, moveTime[nx][ny]);
+                        if (newTime < time[nx][ny]) {
+                            time[nx][ny] = newTime;
+                            pq.add(new Node(nx, ny, newTime));
+                        }
                     }
                 }
             }
         }
-        return dist[n - 1][m - 1];
+        return time[n-1][m-1];
     }
 }
