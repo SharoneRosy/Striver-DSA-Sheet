@@ -1,35 +1,38 @@
 class Solution {
     public int[] sortArray(int[] nums) {
-        mergeSort(0, nums.length - 1, nums);
+        mergeSort(nums,0,nums.length-1);
         return nums;
     }
-    private void mergeSort(int left, int right, int nums[]){
-        if(left >= right)return;
-        int mid = left + (right - left) / 2;
-        // System.out.println("left: " + left + " right: " + right + " mid: "+ mid);
-        mergeSort(left, mid, nums);
-        mergeSort(mid+1, right, nums);
-        merge(left, mid, right, nums);
+    private void mergeSort(int [] arr, int l, int r){
+        if(l>=r) return ;
+        int m=(l+r)/2;
+        mergeSort(arr,l, m);
+        mergeSort(arr,m+1,r);
+        merge(arr,l,m,r);
     }
-    private void merge(int left, int mid, int right, int nums[]){
-        List<Integer> sortedList = new ArrayList<>();
-        int indx1 = left, indx2 = mid + 1;
-        while(indx1 < mid + 1 && indx2 < right + 1){
-            if(nums[indx1] <= nums[indx2]){
-                sortedList.add(nums[indx1++]);
+    private void merge(int [] arr, int l,int m,int r){
+        ArrayList<Integer>temp=new ArrayList<>();
+        int i=l;
+        int j=m+1;
+        while(i<=m && j<=r){
+            if(arr[i]<=arr[j]){
+                temp.add(arr[i]);
+                i++;
             }else{
-                sortedList.add(nums[indx2++]);
+                temp.add(arr[j]);
+                j++;
             }
         }
-        while(indx1 < mid + 1){
-            sortedList.add(nums[indx1++]);
+        while(i<=m){
+            temp.add(arr[i]);
+            i++;
         }
-        while(indx2 < right + 1){
-            sortedList.add(nums[indx2++]);
+        while(j<=r){
+            temp.add(arr[j]);
+            j++;
         }
-        int indx = left;
-        for(var num : sortedList){
-            nums[indx++] = num;
+        for( i=l;i<=r;i++){
+            arr[i]=temp.get(i-l);
         }
     }
 }
