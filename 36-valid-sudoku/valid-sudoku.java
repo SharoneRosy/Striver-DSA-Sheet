@@ -5,9 +5,11 @@ class Solution {
             for(int j=0;j<9;j++){
                 char curr=board[i][j];
                 if(curr!='.'){
-                    if(!seen.add(curr+"row"+i)||
-                       !seen.add(curr+"col"+j)||
-                       !seen.add(curr+"subbox"+i/3+"-"+j/3)) return false;
+                    if(!seen.add(curr+"row"+i) ||
+                       !seen.add(curr+"col"+j) ||
+                       !seen.add(curr+"subbox"+i/3+"-"+j/3)){
+                        return false;
+                       }
                 }
             }
         }
