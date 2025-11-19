@@ -1,28 +1,46 @@
+
 class Solution {
     public String minWindow(String s, String t) {
-        int n=s.length(),m=t.length();
-        int min=Integer.MAX_VALUE;
-        int cnt=0;
-        int startIdx=-1;
-        int l=0,r=0;
-        HashMap<Character,Integer>seen=new HashMap<>();
-        for(char c:t.toCharArray()){
-            seen.put(c,seen.getOrDefault(c,0)+1);
+        int n = s.length(), m = t.length();
+        int minLen = Integer.MAX_VALUE;
+        int matchedCount = 0;
+        int startIdx = -1;
+        int left = 0, right = 0;
+
+        // Frequency map for characters in `t`
+        Map<Character, Integer> map = new HashMap<>();
+        for (char c : t.toCharArray()) {
+            map.put(c, map.getOrDefault(c, 0) + 1);
         }
-        while(r<n){
-            if(seen.getOrDefault(s.charAt(r),0)>0) cnt++;
-            seen.put(s.charAt(r),seen.getOrDefault(s.charAt(r),0)-1);
-            while(cnt==m){
-                if(r-l+1<min){
-                    min=r-l+1;
-                    startIdx=l;
-                }
-                seen.put(s.charAt(l),seen.getOrDefault(s.charAt(l),0)+1);
-                if(seen.get(s.charAt(l))>0) cnt--;
-                l++;
+
+        // Sliding window
+        while (right < n) {
+            char currChar = s.charAt(right);
+
+            // Decrement frequency and update matched count
+            if (map.getOrDefault(currChar, 0) > 0) {
+                matchedCount++;
             }
-            r++;
+            map.put(currChar, map.getOrDefault(currChar, 0) - 1);
+
+            // Shrink the window when all characters from `t` are matched
+            while (matchedCount == m) {
+                if (right - left + 1 < minLen) {
+                    minLen = right - left + 1;
+                    startIdx = left;
+                }
+                                                                                                   
+                char leftChar = s.charAt(left);
+                map.put(leftChar, map.getOrDefault(leftChar, 0) + 1);
+
+                if (map.get(leftChar) > 0) {
+                    matchedCount--;
+                }
+                left++;
+            }
+            right++;
         }
-        return (startIdx==-1)?"":s.substring(startIdx,startIdx+min);
+
+        return (startIdx == -1) ? "" : s.substring(startIdx, startIdx + minLen);
     }
 }
