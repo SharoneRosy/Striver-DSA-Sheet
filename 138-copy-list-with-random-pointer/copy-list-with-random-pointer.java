@@ -32,6 +32,7 @@ class Solution {
             }
             curr=curr.next.next;
         }
+        
 
         Node dummy=new Node(-1);
         Node copyCurr=dummy;
