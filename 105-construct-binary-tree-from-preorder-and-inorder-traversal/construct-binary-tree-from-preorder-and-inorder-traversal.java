@@ -14,24 +14,20 @@
  * }
  */
 class Solution {
-    public TreeNode BuildTree(int[] preorder,int prestart,int preend,int[] inorder,int instart,int inend,HashMap<Integer,Integer>map){
-        if(prestart>preend || instart>inend) return null;
-        TreeNode root =new TreeNode(preorder[prestart]);
-        int inRoot=map.get(root.val);
-        int numLeft=inRoot-instart;
-        root.left=BuildTree(preorder,prestart+1,prestart+numLeft,
-                            inorder,instart,inRoot-1,map);
-        root.right=BuildTree(preorder,prestart+numLeft+1,preend,
-                            inorder,inRoot+1,inend,map);
+    int pi=0;
+    int ii=0;
+    private TreeNode dfs(int [] preorder,int [] inorder,int limit){
+        if(pi>=preorder.length) return null;
+        if(inorder[ii]==limit){
+            ii++;
+            return null;
+        }
+        TreeNode root=new TreeNode(preorder[pi++]);
+        root.left=dfs(preorder,inorder,root.val);
+        root.right=dfs(preorder,inorder,limit);
         return root;
     }
     public TreeNode buildTree(int[] preorder, int[] inorder) {
-        HashMap<Integer,Integer>map=new HashMap<>();
-        for(int i=0;i<inorder.length;i++){
-            map.put(inorder[i],i);
-        }
-        TreeNode root=BuildTree(preorder,0,preorder.length-1,
-                                inorder,0,inorder.length-1,map);
-        return root;
+        return dfs(preorder,inorder,Integer.MAX_VALUE);
     }
 }
