@@ -1,13 +1,11 @@
 class Solution {
     public int leastInterval(char[] tasks, int n) {
-        
-        Map<Character,Integer>map=new HashMap<>();
-        for(char task:tasks){
-            map.put(task,map.getOrDefault(task,0)+1);
-        }
+        HashMap<Character,Integer>map=new HashMap<>();
+        for(char c: tasks) map.put(c,map.getOrDefault(c,0)+1);
         PriorityQueue<Integer>pq=new PriorityQueue<>(Collections.reverseOrder());
-        pq.addAll(map.values());
-        
+        for(int c: map.values()){
+            pq.add(c);
+        }
         int time=0;
         while(!pq.isEmpty()){
             List<Integer>add_back=new ArrayList<>();
@@ -16,10 +14,10 @@ class Solution {
                     int cnt=pq.poll();
                     cnt--;
                     if(cnt>0){
-                    add_back.add(cnt);
-                     }
+                     add_back.add(cnt);
+                    }
                 }
-                time+=1;
+                time++;
                 if(pq.size()==0 && add_back.size()==0) break;
             }
             pq.addAll(add_back);
