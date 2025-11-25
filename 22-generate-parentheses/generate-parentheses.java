@@ -1,16 +1,16 @@
 class Solution {
-    public void solve(int c,int o,String s, int n,List<String> res){
-        if(o==n && c==n) {
+    private void solve(int o,int c,String s, int n, List<String>res){
+        if(o==n && c==n){
             res.add(s);
-            return ;
+            return;
         }
         if(o<n){
-            solve(c,o+1,s+"(",n,res);
+            solve(o+1,c,s+"(",n,res);
         }
         if(c<o){
-            solve(c+1,o,s+")",n,res);
+            solve(o,c+1,s+")",n,res);
         }
-    }
+      }
     public List<String> generateParenthesis(int n) {
         List<String>res=new ArrayList<>();
         String s="";
