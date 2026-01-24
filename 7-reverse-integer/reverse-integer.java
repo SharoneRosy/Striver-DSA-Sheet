@@ -8,6 +8,6 @@ class Solution {
             rev=rev*10+rem;
             n=n/10;
         }
-        return (x<0)?(-rev):rev;
+        return (x<0)?-(rev):rev;
     }
 }
